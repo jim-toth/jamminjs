@@ -1,0 +1,18 @@
+<html>
+	<head>
+		<link rel="stylesheet" href="style/jammin.css" />
+		<script type="text/javascript" src="http://connect.soundcloud.com/sdk.js"></script>
+		<script type="text/javascript" src="https://w.soundcloud.com/player/api.js"></script>
+		<script type="text/javascript" src="lib/jquery-2.0.3.min.js"></script>
+		<script type="text/javascript" src="lib/jsuri-1.1.1.min.js"></script>
+		<script type="text/javascript" src="js/jammin.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				window.jamz = new Jammin($('#jamz'));
+			});
+		</script>
+	</head>
+	<body>
+		<div id='jamz'></div>
+	</body>
+</html>
