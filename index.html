@@ -1,0 +1,33 @@
+<html>
+	<head>
+		<link href="jammin.css" rel="stylesheet" />
+		<script type="text/javascript" src="jquery-2.0.3.min.js"></script>
+		<script type="text/javascript" src="jsuri-1.1.1.min.js"></script>
+		<script type="text/javascript" src="http://connect.soundcloud.com/sdk.js"></script>
+		<script type="text/javascript" src="https://w.soundcloud.com/player/api.js"></script>
+		<script type="text/javascript" src="jammin.js"></script>
+	</head>
+	<body>
+		<div class="jam-logo">
+			<div class="jam-window-text">JamminJS</div>
+		</div>
+		<div class="jam-window" id="jam-window"></div>
+		<span id="playlist"></span>
+		<div class="add-song" id="add-song">
+			<div class="add-song-input-wrap">
+				<input id="add-song-input" class="add-song-input" placeholder="Paste Music Links Here"></input>
+			</div>
+			<div class="add-song-bg">
+				<div class="add-song-text">DRAG MUSIC LINKS HERE</div>
+				<div class="add-song-subtext">hypem.com, soundcloud, youtube</div>
+			</div>
+		</div>
+		<span class="controls-wrap">
+			<div id="controls" class="controls">
+				<a id="prev-control" class="control-button"><<</a>
+				<a id="play-control" class="control-button">></a>
+				<a id="next-control" class="control-button">>></a>
+			</div>
+		</span>
+	</body>
+</html>

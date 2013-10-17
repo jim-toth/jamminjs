@@ -1,0 +1,170 @@
+body {
+	font-family: verdana;
+	font-weight: bold;
+}
+
+.song-title {
+	font-size: 24px;
+}
+
+.pButton {
+	font-weight: bold;
+	font-size: 60px;
+}
+
+.song-wrapper {
+	/*width: 600px;*/
+	/*width:0px;*/
+	background-color:transparent;
+}
+
+.song-wrapper > iframe {
+	overflow: auto;
+	z-index:99999;
+}
+
+.control {
+	width:600px;
+}
+
+.yt-control {
+	height:200px;
+}
+
+.sc-control {
+	height: 166px;
+}
+
+.mp3-wrap {
+	background: #FFFFFF;
+}
+
+.sc-art {
+	/*background-size: 15%;*/
+	background-position: center;
+	background-attachment:fixed;
+}
+
+.add-song {
+	width:500px;
+	height:150px;
+	border:1px solid black;
+	z-index:9999;
+}
+
+.add-song-bg {
+	width:100%;
+	height:100%;
+	background:#FFFFFF;
+	z-index:-2;
+	position:relative;
+	top:0;
+}
+
+.add-song-text {
+	width:100%;
+	height:24px;
+	margin:0 auto;
+	text-align:center;
+	position:relative;
+	top:63px;
+	font-size: 24px;
+	z-index:-1;
+}
+
+.add-song-subtext {
+	width:100%;
+	margin:0 auto;
+	text-align:center;
+	position:relative;
+	top:65px;
+	font-size: 10px;
+	z-index:-1;
+}
+
+.add-song-input {
+	margin:0 auto;
+	position:relative;
+	top:10;
+	height:24px;
+	line-height:24px;
+	width:200px;
+}
+
+.add-song-input-wrap {
+	width:100%;
+	height:0;
+	text-align:center;
+}
+
+#playlist {
+	background:#FFFFFF;
+	width:600px;
+}
+
+.jam-logo {
+	height:100%;
+	width:100%;
+	position:fixed;
+	top:0px;
+	left:0px;
+	z-index:-9999;
+}
+
+.jam-window {
+	height:100%;
+	width:100%;
+	position:fixed;
+	top:0px;
+	left:0px;
+	z-index:-9998;
+}
+
+.jam-window-text {
+	width:100%;
+	height:72px;
+	margin: 0 auto;
+	text-align: center;
+	position:fixed;
+	top:50%;
+	font-size: 72px;
+}
+
+.controls-wrap {
+	width:100%;
+	position:fixed;
+	bottom:0px;
+}
+
+.controls {
+	margin:0 auto;
+	width:166px;
+	height:35px;
+	line-height:35px;
+	background-color:#FFFFFF;
+	border:1px solid black;
+}
+
+.control-button {
+	width: 50px;
+	cursor: hand;
+	display: inline-block;
+	border:1px solid black;
+	margin:0;
+	padding:0;
+	text-align: center;
+	font-weight:900;
+}
+
+.yt-wrap {
+	background-color:#FFFFFF;
+	background-image:url('http://www.youtube.com/yt/brand/media/image/yt-brand-standard-logo-630px.png');
+	background-size:contain;
+	background-repeat: no-repeat;
+	background-position: center;
+	width:200px;
+	height:200px;
+	display:block;
+	cursor:hand;
+	border:1px solid black;
+}
