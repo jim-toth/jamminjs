@@ -1,0 +1,47 @@
+﻿Linkta.pe
+Features
+1. JamminJS
+   1. Overview
+JamminJS is the core engine that runs Linkta.pe.  Service oriented features would reside elsewhere to support possible open-source distribution of the library or for more basic, embedded versions.
+   1. Widget
+JamminJS would support an embedded mode for use on blogs or social networks.  This would mainly be to collect a custom playlist of audio or video for display rather than allowing additions.  DJ Mode, described below, could be used here to suggest or share songs with the embedded widget’s owner.
+1. Sharing
+   1. Overview
+The main purpose of linkta.pe is to provide the ability to collect audio and video sources from around the internet for use as a playlist, or mixtape.  The playlists could then be saved to share or update later.
+1. Visual Features
+   1. Overview
+Visually linkta.pe should give as much power to the song or video as possible to determine the look and feel of the site.  Visual association, as described in the Song Association section below, could be used to provide sources for visualization features.
+   1. Basic Display
+Linkta.pe should display an image or video with each song.  Soundcloud provides album art while youtube provides video, for example.  These settings would be configurable by the user and their personal associations remembered.
+   1. SoundCloud Waveform
+The SoundCloud API provides a url to the waveform image of a song.  This alone can be used or modified to power another mode of visual representation.
+   1. Fullscreen Mode
+Fullscreen mode would be for display or enjoyment if Linkta.pe is being used as a primary source of entertainment.  Advertisements would be hidden to allow for an uninhibited audio and visual experience.
+1. Song Association
+   1. Overview
+Many sources of the same song, video, or other media may be provided by users.  Linkta.pe would attempt to intelligently associate these sources both on its own and based on user association.
+   1. Visual Association
+Linkta.pe would allow users to associate songs with video or images within their playlist.  These could be used to decorate the UI based on the currently playing song.  These associations can also be used to suggest combinations to other users.
+   1. Video Association
+Content creators on youtube often enjoy putting together custom music videos for songs.  These videos could be remembered and offered to other users for additional options for visual representation of a song.
+   1. Video Association - Quality
+If a video source of a song exists it can be synced up with a higher quality audio source of the same song for an improved experience.
+1. Song Suggestion
+   1. Overview
+Linkta.pe could help with the mixtape creation process by suggesting songs to the user.
+   1. Video Suggestion
+Linkta.pe could provide the user with suggestions for visual association based on other users’ associations.
+1. Collaborative Modes
+   1. Overview
+Linkta.pe could be set to multiple collaborative modes to enable collective mixtape generation.
+   1. DJ Mode
+A playlist could be set to DJ Mode to allow for advanced mix features such as crossfade or audio/visual transitions between songs.  DJ Mode could also be used for a more open DJ setting allowing for song suggestions sent in by a user’s mobile phone.
+   1. Shared Mode
+Linkta.pe could be a way to create collections of songs and video with others through a URL or through the widget on social networks.
+1. Mobile
+   1. Overview
+Mobile has many applications
+   1. Extension of Desktop
+The mobile version of linkta.pe would support the core functionality of the app so mixtapes can be enjoyed anywhere.
+   1. Remote Control
+Smartphones could be used to control a currently running desktop instance of linkta.pe connected to a media pc for presentation.
