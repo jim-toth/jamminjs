@@ -1,3 +1,3 @@
-define(["jquery", "app/Jammin"], function($, Jammin) {
-	var jamz = new Jammin($('#jamz').first());
+define(["jquery", "app/jammin"], function($, Jammin) {
+	window.jamz = new Jammin($('#jamz').first());
 });

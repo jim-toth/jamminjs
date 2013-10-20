@@ -1,22 +1,26 @@
-define(function() {
+define(["app/song", "app/playlist"], function(Song, Playlist) {
 	var SC_API_KEY = '8320c8fe21f98b89ad50068014b92068';
 
 	var Jammin = function (div) {
 		this.container = div;
-		this.supports_string = 'hypem, soundcloud, youtube';
-		this.init();
+		this.initAPIs();
 	}
 
-	Jammin.prototype.init = function() {
+	Jammin.prototype.initAPIs = function() {
 		// initialize soundcloud
 		SC.initialize({client_id:SC_API_KEY});
 
 		// initialize youtube
-		window.onYouTubePlayerAPIReady = this.build();
+		window.onYouTubePlayerAPIReady = this.init();
 		var tag = document.createElement('script');
 		tag.src = "https://www.youtube.com/player_api";
 		var firstScriptTag = document.getElementsByTagName('script')[0];
 		firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+	}
+
+	Jammin.prototype.init = function() {
+		this.supports_string = 'hypem, soundcloud, youtube';
+		this.build();
 	}
 
 	Jammin.prototype.build = function() {
@@ -38,8 +42,8 @@ define(function() {
 
 		// jammin playlist
 		var jammin_playlist = $('<span>').attr('id', 'playlist');
-		this.playlist = jammin_playlist;
-		container.append(this.playlist);
+		this.playlist = new Playlist(jammin_playlist);
+		container.append(jammin_playlist);
 
 		// add song pane
 		var add_song_pane = $('<div>').addClass('add-song').attr('id', 'add-song');
@@ -80,7 +84,6 @@ define(function() {
 			dropped_link = ev.originalEvent.dataTransfer.getData('text/plain');
 		}
 		this.resolveURI(dropped_link, $.proxy(this.buildSong, this));
-		console.log('dropped: ' + dropped_link);
 	}
 
 	Jammin.prototype.acceptPastedSong = function(ev) {
@@ -90,7 +93,6 @@ define(function() {
 		}
 
 		this.resolveURI(pasted_link, $.proxy(this.buildSong, this));
-		console.log('pasted: ' + pasted_link);
 	}
 
 	Jammin.prototype.resolveURI = function(added_uri, callback) {
@@ -101,26 +103,26 @@ define(function() {
 
 			if(path[1] == 'go') { // hypem shortened song link
 				this.unshortenURI(uri, function(unshort_uri) {
-					callback({'type': 'sc', 'uri': unshort_uri});
+					callback({'song_type': 'sc', 'uri': unshort_uri});
 				});
 			} else if (path[1] == 'track') { // full hypem song link
 				this.unshortenURI('http://hypem.com/go/sc/'+path[2], function(unshort_uri) {
-					callback({'type': 'sc', 'uri': unshort_uri});
+					callback({'song_type': 'sc', 'uri': unshort_uri});
 				});
 			} else {
 				console.error('Malformed hypem link: ' + uri.toString());
 			}
-		} else if(uri.host() == 'youtube.com' || 'www'+uri.host() == 'youtube.com') {
-			callback({'song_type': 'yt', 'uri': uri});
-		} else if(uri.host() == 'soundcloud.com' || 'www'+uri.host() == 'soundcloud.com') {
-			callback({'song_type': 'sc', 'uri': uri});
+		} else if(uri.host() == 'youtube.com' || uri.host() == 'www.youtube.com') {
+			callback({ 'song_type': 'yt', 'uri': uri, 'video_id': uri.getQueryParamValue('v') });
+		} else if(uri.host() == 'soundcloud.com' || uri.host() == 'www.soundcloud.com') {
+			callback({ 'song_type': 'sc', 'uri': uri });
 		} else if(uri.host() == 'youtu.be') {
 			this.unshortenURI(uri, function(unshort_uri) {
-				callback({'type': 'yt', 'uri': unshort_uri});
+				callback({ 'song_type': 'yt', 'uri': unshort_uri, 'video_id': uri.path() });
 			});
 		} else if(uri.host() == 'snd.sc') {
 			this.unshortenURI(uri, function(unshort_uri) {
-				callback({'type': 'sc', 'uri': unshort_uri});
+				callback({ 'song_type': 'sc', 'uri': unshort_uri });
 			});
 		} else {
 			console.error('Unrecognized link: ' + uri.toString());
@@ -143,12 +145,13 @@ define(function() {
 	}
 
 	Jammin.prototype.buildSong = function(song_data) {
-		console.log(song_data);
-		this.addSongSkeleton();
+		//console.log(song_data);
+		//this.addSongSkeleton();
+		this.playlist.addSong(new Song(song_data));
 	}
 
 	Jammin.prototype.addSongSkeleton = function() {
-		this.playlist.append('song');
+		
 	}
 
 	return Jammin;
