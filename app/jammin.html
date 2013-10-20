@@ -3,14 +3,8 @@
 		<link rel="stylesheet" href="style/jammin.css" />
 		<script type="text/javascript" src="http://connect.soundcloud.com/sdk.js"></script>
 		<script type="text/javascript" src="https://w.soundcloud.com/player/api.js"></script>
-		<script type="text/javascript" src="lib/jquery-2.0.3.min.js"></script>
-		<script type="text/javascript" src="lib/jsuri-1.1.1.min.js"></script>
-		<script type="text/javascript" src="js/jammin.js"></script>
-		<script type="text/javascript">
-			$(document).ready(function(){
-				window.jamz = new Jammin($('#jamz'));
-			});
-		</script>
+		<script type="text/javascript" src="js/lib/jsuri.js"></script>
+		<script data-main="js/app" src="js/lib/require.js"></script>
 	</head>
 	<body>
 		<div id='jamz'></div>
