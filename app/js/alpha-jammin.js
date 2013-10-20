@@ -139,7 +139,7 @@ function onYouTubePlayerReady(id) {
 }
 
 function bindAddSongPane() {
-	var acceptDiv = $('div#add-song');//.addClass('add-song').append($("<div>").addClass('add-song-text').text('DRAG MUSIC HERE'));
+	var acceptDiv = $('div#add-song');
 	acceptDiv.bind("dragover", function(ev) {
 		ev.preventDefault();
 	});
@@ -152,7 +152,6 @@ function bindAddSongPane() {
 
 	var songInput = $('#add-song-input').bind("paste", function(ev) {
 		addSong(ev.originalEvent.clipboardData.getData('text/plain'));
-		$(this).val('');
 	});
 }
 
