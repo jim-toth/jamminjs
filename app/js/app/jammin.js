@@ -85,7 +85,7 @@ define(["app/song", "app/playlist"], function(Song, Playlist) {
 		if(typeof ev.originalEvent.dataTransfer.getData('text/plain') != 'undefined') {
 			dropped_link = ev.originalEvent.dataTransfer.getData('text/plain');
 		}
-		this.resolveURI(dropped_link, $.proxy(this.buildSong, this));
+		this.resolveURI(dropped_link, $.proxy(this.addSongToPlaylist, this));
 	}
 
 	Jammin.prototype.acceptPastedSong = function(ev) {
@@ -94,7 +94,7 @@ define(["app/song", "app/playlist"], function(Song, Playlist) {
 			pasted_link = ev.originalEvent.clipboardData.getData('text/plain');
 		}
 
-		this.resolveURI(pasted_link, $.proxy(this.buildSong, this));
+		this.resolveURI(pasted_link, $.proxy(this.addSongToPlaylist, this));
 	}
 
 	Jammin.prototype.resolveURI = function(added_uri, callback) {
@@ -146,12 +146,8 @@ define(["app/song", "app/playlist"], function(Song, Playlist) {
 		});
 	}
 
-	Jammin.prototype.buildSong = function(song_data) {
+	Jammin.prototype.addSongToPlaylist = function(song_data) {
 		this.playlist.addSong(new Song(song_data));
-	}
-
-	Jammin.prototype.addSongSkeleton = function() {
-		
 	}
 
 	return Jammin;
