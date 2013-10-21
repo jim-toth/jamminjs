@@ -38,8 +38,8 @@ define(function() {
 				this.player.pause();
 				this.seek(0);
 			} else if (this.song_type == 'yt') {
-				this.player.pauseVideo();
 				this.seek(0);
+				this.player.pauseVideo();
 			}
 		}
 	}

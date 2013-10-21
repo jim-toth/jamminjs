@@ -149,13 +149,15 @@ define(["app/song", "app/jamdisplay"], function(Song, JamDisplay) {
 			$('#play-control', this.song_controls).text('||');
 			if(!isCurrentSong) {
 				this.stopCurrentTrack();
-				this['currentTrack'] = this.songs[thisIdx];
+				this.currentTrack = this.songs[thisIdx];
 			}
 			this.jamDisplay.hide();
 			$(event.target.a).addClass('jammin-window');
 		} else if(event.data == YT.PlayerState.PAUSED) {
 			if(isCurrentSong) {
 				$('#play-control', this.song_controls).text('>');
+			} else {
+				$(event.target.a).removeClass('jammin-window');
 			}
 		}
 	}
@@ -188,7 +190,7 @@ define(["app/song", "app/jamdisplay"], function(Song, JamDisplay) {
 			var nSong = this.songs[currentIdx+1];
 			nSong.play();
 		} else {
-			this['currentTrack'] = undefined;
+			this.currentTrack = this.songs[currentIdx];
 		}
 	}
 
