@@ -105,11 +105,11 @@ define(["app/song", "app/playlist"], function(Song, Playlist) {
 
 			if(path[1] == 'go') { // hypem shortened song link
 				this.unshortenURI(uri, function(unshort_uri) {
-					callback({'song_type': 'sc', 'uri': unshort_uri});
+					callback({'song_type': 'sc', 'uri': (new Uri(unshort_uri)) });
 				});
 			} else if (path[1] == 'track') { // full hypem song link
 				this.unshortenURI('http://hypem.com/go/sc/'+path[2], function(unshort_uri) {
-					callback({'song_type': 'sc', 'uri': unshort_uri});
+					callback({'song_type': 'sc', 'uri': (new Uri(unshort_uri))});
 				});
 			} else {
 				console.error('Malformed hypem link: ' + uri.toString());
@@ -119,12 +119,10 @@ define(["app/song", "app/playlist"], function(Song, Playlist) {
 		} else if(uri.host() == 'soundcloud.com' || uri.host() == 'www.soundcloud.com') {
 			callback({ 'song_type': 'sc', 'uri': uri });
 		} else if(uri.host() == 'youtu.be') {
-			this.unshortenURI(uri, function(unshort_uri) {
-				callback({ 'song_type': 'yt', 'uri': unshort_uri, 'video_id': uri.path() });
-			});
+				callback({ 'song_type': 'yt', 'uri': uri, 'video_id': uri.path() });
 		} else if(uri.host() == 'snd.sc') {
 			this.unshortenURI(uri, function(unshort_uri) {
-				callback({ 'song_type': 'sc', 'uri': unshort_uri });
+				callback({ 'song_type': 'sc', 'uri': (new Uri(unshort_uri)) });
 			});
 		} else {
 			console.error('Unrecognized link: ' + uri.toString());
@@ -148,6 +146,10 @@ define(["app/song", "app/playlist"], function(Song, Playlist) {
 
 	Jammin.prototype.addSongToPlaylist = function(song_data) {
 		this.playlist.addSong(new Song(song_data));
+	}
+
+	Jammin.prototype.loadPlaylist = function(playlist_json) {
+
 	}
 
 	return Jammin;
