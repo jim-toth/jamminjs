@@ -38,17 +38,32 @@ define(["app/song", "app/jamdisplay"], function(Song, JamDisplay) {
 		$('#next-control', song_controls).bind('click', $.proxy(this.playNext,this));
 	}
 
-	Playlist.prototype.addSong = function(song) {
-		var newIdx = this.songs.length;
+	Playlist.prototype.addSong = function(song, idx) {
+		var newIdx;
+		if(typeof idx != 'undefined') {
+			newIdx = idx;
+		} else {
+			newIdx = idx;
+		}
+		
+		if(typeof idx != 'undefined') {
+			var end = this.songs.splice(idx);
+			this.songs.push(song);
+			$.each(end, $.proxy(function(idx, song) {
+				this.songs.push(song);
+			}, this));
+		} else {
+			this.songs.push(song);
+		}
 
 		var newSongContainer = this.buildSongContainer(newIdx, song.song_type);
 		song["container"] = newSongContainer;
 		this.container.append(song.container);
-		this.songs.push(song);
+
 		if(song.song_type == 'sc') {
-			this.buildSoundCloud(song);
+			this.buildSoundCloud(song, $.proxy(this.refreshPlaylist, this));
 		} else if(song.song_type == 'yt') {
-			this.buildYouTube(song);
+			this.buildYouTube(song, $.proxy(this.refreshPlaylist, this));
 		}
 
 		// set recently added track as current song if there isnt already one
@@ -91,7 +106,7 @@ define(["app/song", "app/jamdisplay"], function(Song, JamDisplay) {
 		return sWrap;
 	}
 
-	Playlist.prototype.buildSoundCloud = function(song) {
+	Playlist.prototype.buildSoundCloud = function(song, callback) {
 		if(typeof song.track_id != 'undefined') {
 			// SC.oEmbed('http://api.soundcloud.com/tracks/'+song.track_id, SCopts, function(oEmbed) {
 			// 	$('.control', song.container).append(oEmbed);
@@ -108,7 +123,7 @@ define(["app/song", "app/jamdisplay"], function(Song, JamDisplay) {
 					song.player.bind(SC.Widget.Events.FINISH, $.proxy(function() {
 						this.jamDisplay.clearBgImage();
 						this.playNext();
-					},this));
+					}, this));
 
 					song.player.bind(SC.Widget.Events.PLAY, $.proxy(function() {
 						if(typeof this.currentTrack != 'undefined') {
@@ -120,7 +135,7 @@ define(["app/song", "app/jamdisplay"], function(Song, JamDisplay) {
 							this.jamDisplay.show();
 							$('#play-control', this.song_controls).text('||');
 						}
-					},this));
+					}, this));
 
 					song.player.bind(SC.Widget.Events.PAUSE, $.proxy(function() {
 						if(typeof this.currentTrack != 'undefined') {
@@ -128,7 +143,11 @@ define(["app/song", "app/jamdisplay"], function(Song, JamDisplay) {
 								$('#play-control', this.song_controls).text('>');
 							}
 						}
-					},this));
+					}, this));
+
+					if($(this.container).children().length == this.loaded_length) {
+						callback();
+					}
 				},this));
 			},this));
 		}
@@ -162,12 +181,15 @@ define(["app/song", "app/jamdisplay"], function(Song, JamDisplay) {
 		}
 	}
 
-	Playlist.prototype.buildYouTube = function(song) {
+	Playlist.prototype.buildYouTube = function(song, callback) {
 		var theseOpts = $.extend(true, { 'videoId': song.video_id }, this.YTopts);
 		var target = $('.yt-target', song.container).first().attr('id');
 		var player = new YT.Player(target, theseOpts);
 		song["player"] = player;
 		$(player.a).removeClass('yt-target');
+		if($(this.container).children().length == this.loaded_length) {
+			callback();
+		}
 	}
 
 	Playlist.prototype.getIndexOfTrack = function(song) {
@@ -213,6 +235,15 @@ define(["app/song", "app/jamdisplay"], function(Song, JamDisplay) {
 		if(typeof this.currentTrack != 'undefined') {
 			this.currentTrack.toggle();
 		}
+	}
+
+	Playlist.prototype.refreshPlaylist = function() {
+		$(this.container).empty();
+		$.each(this.songs, $.proxy(function(idx, song) {
+			// TODO: update ids lol
+			$(this.container).append(song.container);
+		}, this));
+		this.currentTrack = this.songs[0];
 	}
 
 	return Playlist;

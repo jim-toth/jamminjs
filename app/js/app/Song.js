@@ -10,6 +10,12 @@ define(function() {
 		if(typeof song_data.video_id != 'undefined') {
 			this.video_id = song_data.video_id;
 		}
+		if(typeof song_data.artist != 'undefined') {
+			this.artist = song_data.artist;
+		}
+		if(typeof song_data.title != 'undefined') {
+			this.title = song_data.title;
+		}
 	}
 
 	Song.prototype.play = function() {

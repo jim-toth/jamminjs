@@ -1,8 +1,9 @@
 define(["app/song", "app/playlist"], function(Song, Playlist) {
 	var SC_API_KEY = '8320c8fe21f98b89ad50068014b92068';
 
-	var Jammin = function (div) {
+	var Jammin = function (div, init_json) {
 		this.container = div;
+		this.init_json = init_json;
 		this.initAPIs();
 	}
 
@@ -11,7 +12,7 @@ define(["app/song", "app/playlist"], function(Song, Playlist) {
 		SC.initialize({client_id:SC_API_KEY});
 
 		// initialize youtube
-		window.onYouTubePlayerAPIReady = this.init();
+		window.onYouTubePlayerAPIReady = $.proxy(this.init, this);
 		var tag = document.createElement('script');
 		tag.src = "https://www.youtube.com/player_api";
 		var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -77,6 +78,11 @@ define(["app/song", "app/playlist"], function(Song, Playlist) {
 
 		// Create Playlist
 		this.playlist = new Playlist(jammin_playlist, this.song_controls, jammin_window);
+
+		//load initial playlist
+		if(typeof this.init_json != 'udnefined') {
+			this.loadPlaylist(this.init_json);
+		}
 	}
 
 	Jammin.prototype.acceptDroppedSong = function(ev) {
@@ -144,12 +150,28 @@ define(["app/song", "app/playlist"], function(Song, Playlist) {
 		});
 	}
 
-	Jammin.prototype.addSongToPlaylist = function(song_data) {
-		this.playlist.addSong(new Song(song_data));
+	Jammin.prototype.addSongToPlaylist = function(song_data, idx) {
+		if(typeof idx != 'undefined') {
+			this.playlist.addSong(new Song(song_data), idx);
+		} else {
+			this.playlist.addSong(new Song(song_data));
+		}
 	}
 
 	Jammin.prototype.loadPlaylist = function(playlist_json) {
-
+		$.getJSON(playlist_json, $.proxy(function(json){
+			this.playlist.loaded_length = json.playlist.length;
+			$.each(json.playlist, $.proxy(function(idx, song){
+				if(song.song_type == 'sc') {
+					this.resolveURI(song.uri, $.proxy(function(rsong) {
+						song.uri = rsong.uri;
+						this.addSongToPlaylist(new Song(song), idx);
+					}, this));
+				} else {
+					this.addSongToPlaylist(new Song(song));
+				}
+			}, this));
+		}, this));
 	}
 
 	return Jammin;
