@@ -42,7 +42,6 @@ define(["app/song", "app/playlist"], function(Song, Playlist) {
 
 		// jammin playlist
 		var jammin_playlist = $('<span>').attr('id', 'playlist');
-		this.playlist = new Playlist(jammin_playlist);
 		container.append(jammin_playlist);
 
 		// add song pane
@@ -75,6 +74,9 @@ define(["app/song", "app/playlist"], function(Song, Playlist) {
 		song_controls.append(prev_control,play_control,next_control);
 		this.song_controls = song_controls;
 		container.append(song_controls_wrap);
+
+		// Create Playlist
+		this.playlist = new Playlist(jammin_playlist, this.song_controls);
 	}
 
 	Jammin.prototype.acceptDroppedSong = function(ev) {
