@@ -1,10 +1,15 @@
-define(["app/song", "app/scevents"], function(Song, SCHelper) {
+define(["app/song", "app/jamdisplay"], function(Song, JamDisplay) {
 
-	var Playlist = function(div, song_controls) {
+	var Playlist = function(div, song_controls, jam_window) {
 		this.container = div;
+		
 		this.songs = new Array();
-		this["currentTrack"] = undefined;
+		
+		this.currentTrack = undefined;
+		
 		this.bindSongControls(song_controls);
+
+		this.jamDisplay = new JamDisplay(jam_window);
 
 		this.SCopts = {
 			"auto_play" : false,
@@ -69,7 +74,7 @@ define(["app/song", "app/scevents"], function(Song, SCHelper) {
 			builtSong.attr('songType', 'sc');
 			var ytwrap = $('<div>');
 			ytwrap.addClass('yt-wrap');
-			//ytwrap.bind('click',this.toggleCurrentSong);
+			ytwrap.bind('click', $.proxy(this.toggleCurrentSong, this));
 			var yttarget = $('<div>').attr('id', 'yt-'+Date.now());
 			yttarget.addClass('yt-target');
 			ytwrap.append(yttarget);
@@ -101,6 +106,7 @@ define(["app/song", "app/scevents"], function(Song, SCHelper) {
 					song["player"] = SC.Widget($('iframe', song.container)[0]);
 
 					song.player.bind(SC.Widget.Events.FINISH, $.proxy(function() {
+						this.jamDisplay.clearBgImage();
 						this.playNext();
 					},this));
 
@@ -110,7 +116,8 @@ define(["app/song", "app/scevents"], function(Song, SCHelper) {
 								this.stopCurrentTrack();
 								this['currentTrack'] = song;
 							}
-							// TODO: jam-window logic
+							this.jamDisplay.setBgImage(track.artwork_url);
+							this.jamDisplay.show();
 							$('#play-control', this.song_controls).text('||');
 						}
 					},this));
@@ -136,16 +143,16 @@ define(["app/song", "app/scevents"], function(Song, SCHelper) {
 
 		if(event.data == YT.PlayerState.ENDED) {
 			this.playNext();
-			// TODO: remove jam-window class for this song
-			// TODO: show default jam-window
+			$(event.target.a).removeClass('jammin-window');
+			this.jamDisplay.show();
 		} else if(event.data == YT.PlayerState.PLAYING) {
 			$('#play-control', this.song_controls).text('||');
 			if(!isCurrentSong) {
 				this.stopCurrentTrack();
 				this['currentTrack'] = this.songs[thisIdx];
 			}
-			// TODO: hide default jam-window
-			// TODO: add jam-window class for this song
+			this.jamDisplay.hide();
+			$(event.target.a).addClass('jammin-window');
 		} else if(event.data == YT.PlayerState.PAUSED) {
 			if(isCurrentSong) {
 				$('#play-control', this.song_controls).text('>');
@@ -158,6 +165,7 @@ define(["app/song", "app/scevents"], function(Song, SCHelper) {
 		var target = $('.yt-target', song.container).first().attr('id');
 		var player = new YT.Player(target, theseOpts);
 		song["player"] = player;
+		$(player.a).removeClass('yt-target');
 	}
 
 	Playlist.prototype.getIndexOfTrack = function(song) {

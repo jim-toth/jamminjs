@@ -17,7 +17,6 @@ define(function() {
 			if(this.song_type == 'sc') {
 				this.player.play();
 			} else if(this.song_type == 'yt') {
-				this.player.seekTo(0);
 				this.player.playVideo();
 			}
 		}
@@ -40,6 +39,7 @@ define(function() {
 				this.seek(0);
 			} else if (this.song_type == 'yt') {
 				this.player.pauseVideo();
+				this.seek(0);
 			}
 		}
 	}
@@ -63,7 +63,7 @@ define(function() {
 			if (this.song_type == 'sc') {
 				this.player.seekTo(time);
 			} else if (this.song_type == 'yt') {
-				//TODO: YT seek
+				this.player.seekTo(time);
 			}
 		}
 	}

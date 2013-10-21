@@ -76,7 +76,7 @@ define(["app/song", "app/playlist"], function(Song, Playlist) {
 		container.append(song_controls_wrap);
 
 		// Create Playlist
-		this.playlist = new Playlist(jammin_playlist, this.song_controls);
+		this.playlist = new Playlist(jammin_playlist, this.song_controls, jammin_window);
 	}
 
 	Jammin.prototype.acceptDroppedSong = function(ev) {
@@ -147,8 +147,6 @@ define(["app/song", "app/playlist"], function(Song, Playlist) {
 	}
 
 	Jammin.prototype.buildSong = function(song_data) {
-		//console.log(song_data);
-		//this.addSongSkeleton();
 		this.playlist.addSong(new Song(song_data));
 	}
 
