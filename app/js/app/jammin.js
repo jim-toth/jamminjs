@@ -136,13 +136,15 @@ define(["app/song", "app/playlist"], function(Song, Playlist) {
 	}
 
 	Jammin.prototype.unshortenURI = function(short_uri, callback) {
-		$.ajax({
+		return $.ajax({
 			type: 'GET',
 			url: 'http://api.unshort.me/unshorten?r='+short_uri.toString()+'&api_key=e4a749627720e8c0f782f9331b28acad&format=jsonp',
 			contentType: "application/json",
 			dataType: 'jsonp',
 			success: function(json) {
-				callback(json.resolvedURL);
+				if (typeof callback != 'undefined') {
+					callback(json.resolvedURL);
+				}
 			},
 			error: function(e) {
 				console.log(e.message);
@@ -159,18 +161,29 @@ define(["app/song", "app/playlist"], function(Song, Playlist) {
 	}
 
 	Jammin.prototype.loadPlaylist = function(playlist_json) {
-		$.getJSON(playlist_json, $.proxy(function(json){
-			this.playlist.loaded_length = json.playlist.length;
-			$.each(json.playlist, $.proxy(function(idx, song){
+		$.getJSON(playlist_json, $.proxy(function(json) {
+			var resolves = new Array();
+			
+			$.each(json.playlist, $.proxy(function(idx, song) {
 				if(song.song_type == 'sc') {
-					this.resolveURI(song.uri, $.proxy(function(rsong) {
-						song.uri = rsong.uri;
-						this.addSongToPlaylist(new Song(song), idx);
-					}, this));
-				} else {
-					this.addSongToPlaylist(new Song(song));
+					song.uri = new Uri(song.uri);
+					if(song.uri.host() == 'hypem.com' && song.uri.path().split("/")[1] == 'track') {
+						song.uri = 'http://hypem.com/go/sc/'+song.uri.path().split("/")[2];
+					}
+					resolves.push(
+						this.unshortenURI(song.uri, $.proxy(function(ruri) {
+							song.uri = ruri;
+						}, this))
+					);
 				}
 			}, this));
+
+			$.when.apply($, resolves).done($.proxy(function() {
+				$.each(json.playlist, $.proxy(function(idx, song) {
+					song.uri = new Uri(song.uri);
+				}, this));
+				this.playlist.addSongs(json);
+			}, this));			
 		}, this));
 	}
 

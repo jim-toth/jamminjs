@@ -47,28 +47,44 @@ define(["app/song", "app/jamdisplay"], function(Song, JamDisplay) {
 		}
 		
 		if(typeof idx != 'undefined') {
-			var end = this.songs.splice(idx);
-			this.songs.push(song);
-			$.each(end, $.proxy(function(idx, song) {
-				this.songs.push(song);
-			}, this));
+			this.songs.insert(idx, song);
 		} else {
 			this.songs.push(song);
 		}
 
-		var newSongContainer = this.buildSongContainer(newIdx, song.song_type);
-		song["container"] = newSongContainer;
+		song.container = this.buildSongContainer(newIdx, song.song_type);
 		this.container.append(song.container);
 
 		if(song.song_type == 'sc') {
-			this.buildSoundCloud(song, $.proxy(this.refreshPlaylist, this));
+			this.buildSoundCloud(song);//, $.proxy(this.refreshPlaylist, this));
 		} else if(song.song_type == 'yt') {
-			this.buildYouTube(song, $.proxy(this.refreshPlaylist, this));
+			this.buildYouTube(song);//, $.proxy(this.refreshPlaylist, this));
 		}
 
 		// set recently added track as current song if there isnt already one
 		if(typeof this.currentTrack == 'undefined') {
 			this["currentTrack"] = song;
+		}
+	}
+
+	Playlist.prototype.addSongs = function (songs) {
+		console.log(songs.playlist);
+		$.each(songs.playlist, $.proxy(function(idx, song) {
+			song = new Song(song);
+			this.songs.insert(idx, song);
+
+			song.container = this.buildSongContainer(idx, song.song_type);
+			this.container.append(song.container);
+
+			if(song.song_type == 'sc') {
+				this.buildSoundCloud(song);
+			} else if(song.song_type == 'yt') {
+				this.buildYouTube(song);
+			}
+		}, this));
+
+		if(typeof this.currentTrack == 'undefined' && songs.playlist.length > 0) {
+			this["currentTrack"] = this.songs[0];
 		}
 	}
 
