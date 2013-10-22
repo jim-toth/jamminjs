@@ -68,7 +68,6 @@ define(["app/song", "app/jamdisplay"], function(Song, JamDisplay) {
 	}
 
 	Playlist.prototype.addSongs = function (songs) {
-		console.log(songs.playlist);
 		$.each(songs.playlist, $.proxy(function(idx, song) {
 			song = new Song(song);
 			this.songs.insert(idx, song);
@@ -260,6 +259,25 @@ define(["app/song", "app/jamdisplay"], function(Song, JamDisplay) {
 			$(this.container).append(song.container);
 		}, this));
 		this.currentTrack = this.songs[0];
+	}
+
+	Playlist.prototype.toPlainObject = function() {
+		var plistObj = { "playlist": [] };
+
+		$.each(this.songs, $.proxy(function(idx, song) {
+			var sObj = {};
+			$.each(song, $.proxy(function(prop_name, song_prop) {
+				if(prop_name == 'artist' || prop_name == 'title'
+					|| prop_name == 'song_type' || prop_name == 'video_id') {
+					sObj[prop_name] = song_prop;
+				} else if(prop_name == 'uri') {
+					sObj[prop_name] = song_prop.toString();
+				}
+			}, this));
+			plistObj.playlist.push(sObj);
+		}, this));
+
+		return plistObj;
 	}
 
 	return Playlist;
