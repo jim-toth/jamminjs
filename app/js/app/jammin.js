@@ -71,8 +71,11 @@ define(["app/song", "app/playlist"], function(Song, Playlist) {
 		var prev_control = $('<a>').attr('id', 'prev-control').addClass('control-button').text('<<');
 		var play_control = $('<a>').attr('id', 'play-control').addClass('control-button').text('>');
 		var next_control = $('<a>').attr('id', 'next-control').addClass('control-button').text('>>');
+		var prog_control = $('<div>').attr('id', 'prog-control').addClass('control-prog-wrap');
+		var prog_display = $('<div>').progressbar({ value: 1, max: 100 }).attr('id', 'prog-display').addClass('control-prog');
+		prog_control.append(prog_display);
 		song_controls_wrap.append(song_controls);
-		song_controls.append(prev_control,play_control,next_control);
+		song_controls.append(prev_control,play_control,next_control,prog_control);
 		this.song_controls = song_controls;
 		container.append(song_controls_wrap);
 
@@ -80,7 +83,7 @@ define(["app/song", "app/playlist"], function(Song, Playlist) {
 		this.playlist = new Playlist(jammin_playlist, this.song_controls, jammin_window);
 
 		//load initial playlist
-		if(typeof this.init_json != 'udnefined') {
+		if(typeof this.init_json != 'undefined') {
 			this.loadPlaylist(this.init_json);
 		}
 	}

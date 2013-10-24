@@ -64,12 +64,63 @@ define(function() {
 		}	
 	}
 
-	Song.prototype.seek = function(time) {
+	Song.prototype.seek = function(time, percent, callback) {
 		if (typeof this.player != 'undefined') {
 			if (this.song_type == 'sc') {
-				this.player.seekTo(time);
+				if(percent) {
+					this.player.getDuration($.proxy(function(dur) {
+						this.song_length = dur;
+						this.player.seekTo( ( dur * time ) / 100 );
+						
+						if(typeof callback != 'undefined') {
+							callback();
+						}
+					}, this));
+				} else {
+					this.player.seekTo(time);
+					if(typeof callback != 'undefined') {
+						callback();
+					}
+				}
 			} else if (this.song_type == 'yt') {
-				this.player.seekTo(time);
+				if(percent) {
+					this.song_length = this.player.getDuration();
+					this.player.seekTo( ( this.song_length * time ) / 100 );
+				} else {
+					this.player.seekTo(time);
+				}
+
+				if(typeof callback != 'undefined') {
+					callback();
+				}
+			}
+		}
+	}
+
+	Song.prototype.getProgress = function(percent, callback) {
+		if (typeof this.player != 'undefined') {
+			if (this.song_type == 'sc') {
+				// TODO: SC song progress
+				// this.player.getPosition($.proxy(function(pos) {
+				// 	if(typeof callback != 'undefined') {
+				// 		if (percent) {
+				// 			callback();
+				// 		} else {
+
+				// 		}
+				// 		callback();
+				// 	}
+				// }, this));
+			} else if (this.song_type == 'yt') {
+				if (percent) {
+					if(!this.song_duration) {
+						this.song_duration = this.player.getDuration();
+					}
+					
+					callback( ( this.player.getCurrentTime() / this.player.getDuration() ) * 100 );
+				} else {
+					callback(this.player.getCurrentTime());
+				}
 			}
 		}
 	}

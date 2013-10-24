@@ -34,8 +34,9 @@ define(["app/song", "app/jamdisplay"], function(Song, JamDisplay) {
 	Playlist.prototype.bindSongControls = function(song_controls) {
 		this.song_controls = song_controls;
 		$('#prev-control', song_controls).bind('click', $.proxy(this.playPrev, this));
-		$('#play-control', song_controls).bind('click', $.proxy(this.toggleCurrentSong,this));
-		$('#next-control', song_controls).bind('click', $.proxy(this.playNext,this));
+		$('#play-control', song_controls).bind('click', $.proxy(this.toggleCurrentSong, this));
+		$('#next-control', song_controls).bind('click', $.proxy(this.playNext, this));
+		$('#prog-control', song_controls).bind('click', $.proxy(this.setProg, this));
 	}
 
 	Playlist.prototype.addSong = function(song, idx) {
@@ -160,6 +161,10 @@ define(["app/song", "app/jamdisplay"], function(Song, JamDisplay) {
 						}
 					}, this));
 
+					song.player.bind(SC.Widget.Events.PLAY_PROGRESS, $.proxy(function(audio) {
+						this.updateProg(Math.floor(audio.relativePosition * 100));
+					}, this));
+
 					if($(this.container).children().length == this.loaded_length) {
 						callback();
 					}
@@ -179,11 +184,20 @@ define(["app/song", "app/jamdisplay"], function(Song, JamDisplay) {
 			this.playNext();
 			$(event.target.a).removeClass('jammin-window');
 			this.jamDisplay.show();
+			if(typeof this.currentTrack.prog_check != 'undefined') {
+				clearInterval(this.currentTrack.prog_check);
+			}
 		} else if(event.data == YT.PlayerState.PLAYING) {
+			console.log('playing');
 			$('#play-control', this.song_controls).text('||');
 			if(!isCurrentSong) {
 				this.stopCurrentTrack();
 				this.currentTrack = this.songs[thisIdx];
+				this.currentTrack["prog_check"] = window.setInterval($.proxy(function() {
+					this.currentTrack.getProgress(true, $.proxy(function(prog) {
+						this.updateProg(prog);
+					}, this));
+				}, this), 1000);
 			}
 			this.jamDisplay.hide();
 			$(event.target.a).addClass('jammin-window');
@@ -244,6 +258,23 @@ define(["app/song", "app/jamdisplay"], function(Song, JamDisplay) {
 		if(typeof this.currentTrack != 'undefined') {
 			this.currentTrack.stop();
 		}
+	}
+
+	Playlist.prototype.setProg = function(event) {
+		if(typeof this.currentTrack != 'undefined') {
+			var progWrap = $(event.currentTarget);
+			var x = event.offsetX;
+			var width = progWrap.width();
+			var perc = (x / width) * 100;
+			this.currentTrack.seek(perc, true, $.proxy(function() {
+				$('#prog-display', progWrap).progressbar("value", perc);
+			}, this));
+		}
+	}
+
+	Playlist.prototype.updateProg = function(perc) {
+
+		$('#prog-display', this.song_controls).progressbar("value", perc);
 	}
 
 	Playlist.prototype.toggleCurrentSong = function() {

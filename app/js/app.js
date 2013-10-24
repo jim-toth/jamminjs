@@ -4,7 +4,13 @@ require.config({
 		"app": "../app"
 	},
 	"shim": {
-		"jsuri": ["jsuri"]
+		"jsuri": {
+			exports: 'Uri'
+		},
+		"jqueryui": {
+			exports: '$',
+			deps: ["jquery"]
+		}
 	}
 });
 
