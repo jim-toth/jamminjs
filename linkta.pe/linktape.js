@@ -1,6 +1,7 @@
 var restify = require('restify');
 var MongoClient = require('mongodb').MongoClient;
 var format = require('util').format;
+var request = require('request');
 
 var host = process.env['MONGO_NODE_DRIVER_HOST'] != null ? process.env['MONGO_NODE_DRIVER_HOST'] : 'localhost';
 var port = process.env['MONGO_NODE_DRIVER_PORT'] != null ? process.env['MONGO_NODE_DRIVER_PORT'] : 27017;
@@ -54,7 +55,22 @@ function addPlaylist(req, res, next) {
 }
 
 function unShorten(req, res, next) {
-	//Nothing yet
+    request({
+        uri: req.params.url,
+        method: "HEAD",
+        followRedirect: false
+    }, function( error, response, body ) {
+        if( error ) {
+            res.send({});
+            return console.dir(error);
+        }  
+        else if(Math.floor(response.statusCode/100) == 3) {
+             res.send(response.headers.Location);
+        }
+        else {
+             res.send( req.params.url );
+        }
+    });
 }
 
 //I don't really get how values pass back from inline functions so you can probably clean this up
