@@ -1,6 +1,8 @@
 define(["app/song", "app/playlist"], function(Song, Playlist) {
 	var SC_API_KEY = '8320c8fe21f98b89ad50068014b92068';
 
+	var server = 'http://linkta.pe:8080';
+
 	var Jammin = function (div, init_json) {
 		this.container = div;
 		this.init_json = init_json;
@@ -163,8 +165,8 @@ define(["app/song", "app/playlist"], function(Song, Playlist) {
 		}
 	}
 
-	Jammin.prototype.loadPlaylist = function(playlist_json) {
-		$.getJSON(playlist_json, $.proxy(function(json) {
+	Jammin.prototype.loadPlaylist = function(playlist_uri) {
+		$.getJSON(playlist_uri, $.proxy(function(json) {
 			var resolves = new Array();
 			
 			$.each(json.playlist, $.proxy(function(idx, song) {
@@ -188,6 +190,25 @@ define(["app/song", "app/playlist"], function(Song, Playlist) {
 				this.playlist.addSongs(json);
 			}, this));			
 		}, this));
+	}
+
+	Jammin.prototype.savePlaylist = function() {
+		$.ajax({
+			type: 'POST',
+			url: server + '/p',
+			dataType: 'json',
+			data: JSON.stringify(this.playlist.toPlainObject()),
+			success: function(data, textStatus, jqXHR) {
+				console.log(data);
+				console.log(textStatus);
+				console.log(jaXHR);
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				console.log(jqXHR);
+				console.log(textStatus);
+				console.log(errorThrown);
+			}
+		});
 	}
 
 	return Jammin;
