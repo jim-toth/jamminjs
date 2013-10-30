@@ -124,7 +124,7 @@ function routeUnshorten( request, response ) {
 				response.writeHead(400, { "Content-Type": "text/plain" });
 				response.write(error);
 				response.end();
-			} else if(Math.floor(resp.statusCode/100) == 3) {
+			} else if(resp.statusCode == 301 || resp.statusCode == 302) {
 				response.writeHead(200, { "Content-Type": "application/json" });
 				var json = {"resolvedURL": resp.headers.location};
 				response.write(JSON.stringify(json));
