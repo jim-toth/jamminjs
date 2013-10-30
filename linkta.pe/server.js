@@ -67,6 +67,13 @@ function route( request, response ) {
 	}
 }
 
+/**
+ * Handles /p/laylist requests.
+ *
+ * Sends 200 when GET and playlist has been found,
+ * 	along with playlist JSON.
+ * Sends 404 when GET and playlist has not been found.
+ */
 function routePlaylist( request, response ) {
 	var pathname = url.parse(request.url).pathname;
 	var pathpcs = pathname.split('/');
@@ -96,6 +103,14 @@ function routePlaylist( request, response ) {
 	}
 }
 
+/**
+ * Handles /p/laylist requests.
+ *
+ * Sends 200 when URL has been unshortened or already is.
+ * Sends 400 when URL not specified or request error.
+ * 
+ * Responds with JSON of unshortened, or already-resolved URL.
+ */
 function routeUnshorten( request, response ) {
 	var query = url.parse(request.url, true).query;
 
@@ -111,18 +126,18 @@ function routeUnshorten( request, response ) {
 				response.end();
 			} else if(Math.floor(resp.statusCode/100) == 3) {
 				response.writeHead(200, { "Content-Type": "application/json" });
-				var json = {"resolvedURL": resp.headers.location, "resolved": true};
+				var json = {"resolvedURL": resp.headers.location};
 				response.write(JSON.stringify(json));
 				response.end();
 			} else {
 				response.writeHead(200, { "Content-Type": "application/json" });
-				var json = {"resolvedURL": request.url, "resolved": false};
+				var json = {"resolvedURL": query.r};
 				response.write(JSON.stringify(json));
 				response.end();
 			}
 		});
 	} else {
-		response.writeHead(404, { "Content-Type": "text/plain" });
+		response.writeHead(400, { "Content-Type": "text/plain" });
 		response.write("No URL specified.");
 		response.end();
 	}
