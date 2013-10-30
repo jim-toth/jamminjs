@@ -2,6 +2,7 @@ var http = require('http');
 var url = require('url');
 var path = require('path');
 var fs = require('fs');
+var _request = require('request');
 
 var port = 80;
 var basepath = '../app/';
@@ -96,10 +97,35 @@ function routePlaylist( request, response ) {
 }
 
 function routeUnshorten( request, response ) {
-	// TODO: Unshorten URL and send full in JSON response
-	response.writeHead(200, { "Content-Type": "text/plain" });
-	response.write("u");
-	response.end();
+	var query = url.parse(request.url, true).query;
+
+	if(typeof query.r != 'undefined') {
+		_request({
+			uri: query.r,
+			method: "HEAD",
+			followRedirect: false
+		}, function( error, resp, body ) {
+			if( error ) {
+				response.writeHead(400, { "Content-Type": "text/plain" });
+				response.write(error);
+				response.end();
+			} else if(Math.floor(resp.statusCode/100) == 3) {
+				response.writeHead(200, { "Content-Type": "application/json" });
+				var json = {"resolvedURL": resp.headers.location, "resolved": true};
+				response.write(JSON.stringify(json));
+				response.end();
+			} else {
+				response.writeHead(200, { "Content-Type": "application/json" });
+				var json = {"resolvedURL": request.url, "resolved": false};
+				response.write(JSON.stringify(json));
+				response.end();
+			}
+		});
+	} else {
+		response.writeHead(404, { "Content-Type": "text/plain" });
+		response.write("No URL specified.");
+		response.end();
+	}
 }
 
 /**
@@ -122,7 +148,7 @@ function onRequest( request, response ) {
 		route(request, response);
 	}
 
-	console.log(pathpcs);	
+	console.log(pathpcs);
 }
 
 // Create and listen
