@@ -6,16 +6,20 @@ var fs = require('fs');
 var port = 80;
 var basepath = '../app/';
 
+// Whitelist of allowed files/directories
 var whitelist = [
 	'/index.html',
 	'/style',
 	'/js'
 ];
 
-function extToContentType(file_ext) {
+/**
+ * File extension to content-type
+ */
+function extToContentType( ext ) {
 	var contentType;
 
-	switch(file_ext) {
+	switch(ext) {
 		case '.html':
 			contentType = "text/html";
 			break;
@@ -25,11 +29,23 @@ function extToContentType(file_ext) {
 		case '.js':
 			contentType = 'text/javascript';
 			break;
+		case '.json':
+			contentType = 'application/json';
+			break;
+		default:
+			contentType = 'text/plain';
+			break;
 	}
 
 	return contentType;
 }
 
+/**
+ * Routes file requests through whitelist.
+ *
+ * Sends 200 response with file if allowed.
+ * Sends 404 response if not found in whitelist.
+ */
 function route( request, response ) {
 	var pathname = url.parse(request.url).pathname;
 
@@ -37,6 +53,7 @@ function route( request, response ) {
 		pathname = '/index.html';
 	}
 
+	// Allow direct file requests from whitelist or root directory from whitelist (only domain/root)
 	if( whitelist.indexOf(pathname) > -1 || whitelist.indexOf('/' + pathname.split('/')[1]) > -1 ) {
 		var file = fs.readFileSync(basepath + pathname);
 
@@ -49,13 +66,66 @@ function route( request, response ) {
 	}
 }
 
-function onRequest( request, response ) {
+function routePlaylist( request, response ) {
 	var pathname = url.parse(request.url).pathname;
-	
-	// if request is not slug or REST function, assume file request
-	// TODO: return json as Content-Type: application.json
-	route(request, response);
+	var pathpcs = pathname.split('/');
+
+	// Get playlist ID
+	var pid;
+	if (pathpcs.length > 2 && pathpcs[2] != '') {
+		pid = pathpcs[2];
+	}
+
+	var playlistFound = false;
+
+	// TODO: Attempt to find playlist in Mongo, update playlistFound accordingly.
+	if(typeof pid != 'undefined') {
+		playlistFound = true;
+	}
+
+	if(playlistFound) {
+		// TODO: Make this not always return a test file.
+		var json = fs.readFileSync(basepath + '/js/app/test.json');
+		response.writeHead(200, { "Content-Type": "application/json" });
+		response.end(json);
+	} else {
+		response.writeHead(404, { "Content-Type": "text/plain" });
+		response.write("Could not find playlist.");
+		response.end();
+	}
 }
 
+function routeUnshorten( request, response ) {
+	// TODO: Unshorten URL and send full in JSON response
+	response.writeHead(200, { "Content-Type": "text/plain" });
+	response.write("u");
+	response.end();
+}
+
+/**
+ * Handles an incoming request.
+ *
+ * If /p/ is requested, forwards to routePlaylist.
+ * If /u/ is requested, forwards to routeUnshorten.
+ * Else forwards to route.
+ */
+function onRequest( request, response ) {
+	var pathname = url.parse(request.url).pathname;
+	var pathpcs = pathname.split('/');
+
+	// TODO: Check if /p/ or /u/ requests come from this domain.
+	if(pathpcs[1] == 'p') {
+		routePlaylist(request, response);
+	} else if(pathpcs[1] == 'u') {
+		routeUnshorten(request, response);
+	} else {
+		route(request, response);
+	}
+
+	console.log(pathpcs);	
+}
+
+// Create and listen
 http.createServer(onRequest).listen(port);
+
 console.log("\nStarted");
