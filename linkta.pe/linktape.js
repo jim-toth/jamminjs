@@ -33,9 +33,6 @@ function getPlaylist(req, res, next) {
 }
 
 function addPlaylist(req, res, next) {
-	console.log(req.body);
-	res.send({"a": "hello"});
-
 	// var slug = genSlug();
 	
 	// var pIn = req.params.data;
@@ -61,21 +58,20 @@ function addPlaylist(req, res, next) {
 }
 
 function unShorten(req, res, next) {
-    request({
-        uri: req.params.url,
-        method: "HEAD",
-        followRedirect: false
-    }, function( error, response, body ) {
-        if( error ) {
-            res.send({});
-            return console.dir(error);
-        }
-        else if(Math.floor(response.statusCode/100) == 3) { // you have aspergers
-             res.send(response.headers.Location);
-        } else {
-             res.send( req.params.url );
-        }
-    });
+	request({
+		uri: req.params.url,
+		method: "HEAD",
+		followRedirect: false
+	}, function( error, response, body ) {
+		if( error ) {
+			res.send({});
+			return console.dir(error);
+		} else if(Math.floor(response.statusCode/100) == 3) { // you have aspergers
+			res.send(response.headers.Location);
+		} else {
+			res.send( req.params.url );
+		}
+	});
 }
 
 function isPlaylist( slug, callback ) {
@@ -115,14 +111,20 @@ function genSlug() {
 // server.listen(serverport, function() {
 //   console.log('%s listening at %s', server.name, server.url);
 // });
-
+var jammin = fs.readFileSync('../app/jammin.html');
 var basepath = '../app/';
-
 function handler(req, res) {
+	// console.log('req: ' + req);
+	// console.log('res: ' + res);
 	// res.writeHead(200, {'Content-Type': 'text/html'});
 	// res.end(jammin);
 }
 
-http.createServer(handler).listen(serverport, host);
+http.get("http://" + host + "/index.html", function(res) {
+	console.log('hi');
+	res.writeHead(200, {'Content-Type': 'text/html'});
+	res.end(jammin);
+});
 
+http.createServer(handler).listen(serverport, host);
 console.log("http listening at http://" + host + ":" + serverport);

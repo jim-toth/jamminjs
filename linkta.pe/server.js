@@ -46,6 +46,17 @@ function extToContentType( ext ) {
 }
 
 /**
+ * Generates a new slug, or resource (playlist) identifier.
+ */
+function genSlug() {
+	var hrTime = process.hrtime();
+	var st = (hrTime[0] * 1e9 + hrTime[1]).toString(36);
+	st = st.substring(st.length - 9, st.length);
+	
+	return st;
+}
+
+/**
  * Routes file requests through whitelist.
  *
  * Sends 200 response with file if allowed.
@@ -72,12 +83,12 @@ function route( request, response ) {
 }
 
 /**
- * Handles /p/laylist requests.
+ * Handles /p/laylist GET requests.
  *
  * Sends 200 when GET and playlist has been found along with playlist JSON.
  * Sends 404 when GET and playlist has not been found.
  */
-function routePlaylist( request, response ) {
+function getPlaylist( request, response ) {
 	var pathname = url.parse(request.url).pathname;
 	var pathpcs = pathname.split('/');
 
@@ -91,12 +102,6 @@ function routePlaylist( request, response ) {
 
 	if(typeof pid != 'undefined') {
 		MongoClient.connect(format("mongodb://%s:%s/linktape", mongohost, mongoport), function(err, db) {
-
-			// Everything below this line is in a different "thread" as MongoClient.connect is asynchronous.
-			// The original thread has *probably* ended, but you can still reference memory from it.
-			// e.g. I can use pid in the findOne call despite it being declared in another "thread."
-			// This function's scope contains routePlaylist's scope at the time this thread was spawned.
-
 			if(err) {
 				// Error while attempting to connect to Mongo
 				response.writeHead(500, { "Content-Type": "text/plain" });
@@ -105,9 +110,6 @@ function routePlaylist( request, response ) {
 
 				console.log('Could not connect to Mongo DB!');
 			} else {
-
-				// This function is ALSO asynchronous and in a NEW "thread"
-
 				// Attempt to find playlist by ID and send the appropriate response.
 				console.log("Attempting to find playlist with ID: " + pid);
 				db.collection('playlists').findOne({"pid": pid}, function(err, playlist) {
@@ -129,8 +131,6 @@ function routePlaylist( request, response ) {
 							response.write("Could not find playlist.");
 							response.end();
 						}
-						console.log(playlist);
-
 					}
 				});
 			}
@@ -139,6 +139,97 @@ function routePlaylist( request, response ) {
 		// Invalid or no playlist ID, send 400 bad request
 		response.writeHead(400, { "Content-Type": "text/plain" });
 		response.write("Invalid playlist request.");
+		response.end();
+	}
+}
+
+/**
+ * Handles /p/laylist POST requests.
+ *
+ * Sends 400 Bad Request when no data sent.
+ * Sends 500 Server Error on Mongo error.
+ * Sends 200 OK when saved successfully.
+ */
+function savePlaylist( request, response ) {
+	if(request.headers["content-length"] > 0) {
+		// Request data is sent in chunks if it is too big.
+		// Data must be handled through events.
+		var data = '';
+
+		// Received a chunk, concatenate.
+		request.on('data', function(chunk) {
+			data += chunk;
+		});
+
+		// Done receiving data, attempt to save playlist
+		request.on('end', function() {
+			var json = JSON.parse(data);
+			
+			var pl = new Object();
+			pl.pid = genSlug();
+			pl.name = json.name;
+			pl.playlist = new Array();
+
+			for(var i = 0; i < json.playlist.length; i++) {
+				pl.playlist[i] = new Object();
+				pl.playlist[i].title = json.playlist[i].title;
+				pl.playlist[i].artist = json.playlist[i].artist;
+				pl.playlist[i].uri = json.playlist[i].uri;
+				pl.playlist[i].song_type = json.playlist[i].song_type;
+				pl.playlist[i].video_id = json.playlist[i].video_id;
+			}
+
+			console.log("SAVING PLAYLIST:\n\n");
+			console.log(pl);
+
+			MongoClient.connect(format("mongodb://%s:%s/linktape", mongohost, mongoport), function(err, db) {
+				if(err) {
+					// Error while attempting to connect to Mongo
+					response.writeHead(500, { "Content-Type": "text/plain" });
+					response.write("An error has occurred.");
+					response.end();
+
+					console.log('Could not connect to Mongo DB!');
+				} else {
+					// Connection successful, attempt to save playlist.
+					// TODO: Check for collisions here.
+					db.collection('playlists').insert(pl, function(err, what) {
+						if(err) {
+							// Error while attempting to connect to Mongo
+							response.writeHead(500, { "Content-Type": "text/plain" });
+							response.write("An error has occurred.");
+							response.end();
+
+							console.log('Could not connect to Mongo DB!');
+						} else {
+							response.writeHead(200, { "Content-Type": "application/json" });
+							response.write(JSON.stringify({ "pid": pl.pid }));
+							response.end();
+						}
+					});
+				}
+			});
+		});
+	} else {
+		// No data sent, yell at them
+		response.writeHead(400, { "Content-Type": "text/plain" });
+		response.write('400 Bad Request: No data sent.');
+		response.end();
+	}
+}
+
+/**
+ * Routes /p/laylist requests.
+ */
+function routePlaylist( request, response ) {
+	if(request.method == 'GET') {
+		getPlaylist(request, response);
+	} else if(request.method == 'POST') {
+		savePlaylist(request, response);
+	} else {
+		// Invalid request
+		response.writeHead(400, { "Content-Type": "text/plain" });
+		response.write("500 Bad Request - Method not valid.");
 		response.end();
 	}
 }
@@ -202,8 +293,6 @@ function onRequest( request, response ) {
 	} else {
 		route(request, response);
 	}
-
-	//console.log(pathpcs);
 }
 
 // Create and listen
