@@ -3,8 +3,12 @@ var url = require('url');
 var path = require('path');
 var fs = require('fs');
 var _request = require('request');
+var MongoClient = require('mongodb').MongoClient;
+var format = require('util').format;
 
 var port = 80;
+var mongohost = 'localhost';
+var mongoport = 27017;
 var basepath = '../app/';
 
 // Whitelist of allowed files/directories
@@ -70,8 +74,7 @@ function route( request, response ) {
 /**
  * Handles /p/laylist requests.
  *
- * Sends 200 when GET and playlist has been found,
- * 	along with playlist JSON.
+ * Sends 200 when GET and playlist has been found along with playlist JSON.
  * Sends 404 when GET and playlist has not been found.
  */
 function routePlaylist( request, response ) {
@@ -86,19 +89,56 @@ function routePlaylist( request, response ) {
 
 	var playlistFound = false;
 
-	// TODO: Attempt to find playlist in Mongo, update playlistFound accordingly.
 	if(typeof pid != 'undefined') {
-		playlistFound = true;
-	}
+		MongoClient.connect(format("mongodb://%s:%s/linktape", mongohost, mongoport), function(err, db) {
 
-	if(playlistFound) {
-		// TODO: Make this not always return a test file.
-		var json = fs.readFileSync(basepath + '/js/app/test.json');
-		response.writeHead(200, { "Content-Type": "application/json" });
-		response.end(json);
+			// Everything below this line is in a different "thread" as MongoClient.connect is asynchronous.
+			// The original thread has *probably* ended, but you can still reference memory from it.
+			// e.g. I can use pid in the findOne call despite it being declared in another "thread."
+			// This function's scope contains routePlaylist's scope at the time this thread was spawned.
+
+			if(err) {
+				// Error while attempting to connect to Mongo
+				response.writeHead(500, { "Content-Type": "text/plain" });
+				response.write("An error has occurred.");
+				response.end();
+
+				console.log('Could not connect to Mongo DB!');
+			} else {
+
+				// This function is ALSO asynchronous and in a NEW "thread"
+
+				// Attempt to find playlist by ID and send the appropriate response.
+				console.log("Attempting to find playlist with ID: " + pid);
+				db.collection('playlists').findOne({"pid": pid}, function(err, playlist) {
+					if(err) { 
+						// Error while searching Mongo
+						response.writeHead(500, { "Content-Type": "text/plain" });
+						response.write("Could not connect to Mongo DB!");
+						response.end();
+					} else {
+						if(playlist != null) {
+							// Found playlist.
+							response.writeHead(200, { "Content-Type": "application/json" });
+							playlist._id = undefined;
+							response.write(JSON.stringify(playlist));
+							response.end();
+						} else {
+							// Could not find playlist.
+							response.writeHead(404, { "Content-Type": "text/plain" });
+							response.write("Could not find playlist.");
+							response.end();
+						}
+						console.log(playlist);
+
+					}
+				});
+			}
+		});
 	} else {
-		response.writeHead(404, { "Content-Type": "text/plain" });
-		response.write("Could not find playlist.");
+		// Invalid or no playlist ID, send 400 bad request
+		response.writeHead(400, { "Content-Type": "text/plain" });
+		response.write("Invalid playlist request.");
 		response.end();
 	}
 }
@@ -163,7 +203,7 @@ function onRequest( request, response ) {
 		route(request, response);
 	}
 
-	console.log(pathpcs);
+	//console.log(pathpcs);
 }
 
 // Create and listen
