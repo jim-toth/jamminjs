@@ -131,38 +131,47 @@ function route(request, response) {
 		var pid = pathname.split("/")[1];
 		mongoGetPlaylist(pid, function(err, playlist) {
 			if (err) {
-				ltLog.prod('Denied request for ' + pathname);
-				response.writeHead(404, {
+				ltLog.error(err);
+				response.writeHead(500, {
 					"Content-Type": "text/plain"
 				});
-				response.write("404");
+				response.write("Internal Server Error");
 				response.end();
 			} else {
-				fs.readFile(basepath + '/playlist.ejs', {
-					"encoding": "utf8"
-				}, function(err, file) {
-					if (err) {
-						ltLog.error(err);
-						response.writeHead(500, {
-							"Content-Type": "text/plain"
-						});
-						response.write("Internal Server Error");
-						response.end();
-					} else {
-						ltLog.prod('Serving playlist ' + pid);
-						response.writeHead(200, {
-							"Content-Type": extToContentType('.ejs')
-						});
-						try {
-							response.end(ejs.render(file, {
-								"title": "LINKTA.PE - " + playlist.name,
-								"init_playlist": JSON.stringify(playlist)
-							}));
-						} catch (e) {
-							ltLog.dev(e);
+				if(playlist != null) {
+					fs.readFile(basepath + '/playlist.ejs', {
+						"encoding": "utf8"
+					}, function(err, file) {
+						if (err) {
+							ltLog.error(err);
+							response.writeHead(500, {
+								"Content-Type": "text/plain"
+							});
+							response.write("Internal Server Error");
+							response.end();
+						} else {
+							ltLog.prod('Serving playlist ' + pid);
+							response.writeHead(200, {
+								"Content-Type": extToContentType('.ejs')
+							});
+							try {
+								response.end(ejs.render(file, {
+									"title": "LINKTA.PE - " + (playlist.name || 'Untitled Playlist'),
+									"init_playlist": JSON.stringify(playlist)
+								}));
+							} catch (e) {
+								ltLog.dev(e);
+							}
 						}
-					}
-				});
+					});
+				} else {
+					ltLog.prod('Denied request for ' + pathname);
+					response.writeHead(404, {
+						"Content-Type": "text/plain"
+					});
+					response.write("404");
+					response.end();
+				}
 			}
 		});
 	}

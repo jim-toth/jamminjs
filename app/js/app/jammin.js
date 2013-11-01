@@ -145,14 +145,16 @@ define(["app/song", "app/playlist"], function(Song, Playlist) {
 			type: 'GET',
 			url: '/u?r=' + short_uri.toString(),
 			contentType: "application/json",
-			dataType: 'jsonp',
+			dataType: 'json',
 			success: function(json) {
 				if (typeof callback != 'undefined') {
 					callback(json.resolvedURL);
 				}
 			},
-			error: function(e) {
-				console.log(e.message);
+			error: function(jqXHR, textStatus, errorThrown) {
+				console.log(jqXHR);
+				console.log(textStatus);
+				console.log(errorThrown);
 			}
 		});
 	}
