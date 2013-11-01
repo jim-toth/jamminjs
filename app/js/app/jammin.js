@@ -3,9 +3,9 @@ define(["app/song", "app/playlist"], function(Song, Playlist) {
 
 	var server = 'http://linkta.pe:8080';
 
-	var Jammin = function (div, init_json) {
+	var Jammin = function (div, init_playlist) {
 		this.container = div;
-		this.init_json = init_json;
+		this.init_playlist = init_playlist;
 		this.initAPIs();
 	}
 
@@ -85,8 +85,8 @@ define(["app/song", "app/playlist"], function(Song, Playlist) {
 		this.playlist = new Playlist(jammin_playlist, this.song_controls, jammin_window);
 
 		//load initial playlist
-		if(typeof this.init_json != 'undefined') {
-			this.loadPlaylist(this.init_json);
+		if(typeof this.init_playlist != 'undefined') {
+			this.loadPlaylist(this.init_playlist);
 		}
 	}
 
@@ -165,31 +165,57 @@ define(["app/song", "app/playlist"], function(Song, Playlist) {
 		}
 	}
 
-	Jammin.prototype.loadPlaylist = function(playlist_uri) {
-		$.getJSON(playlist_uri, $.proxy(function(json) {
-			var resolves = new Array();
-			
-			$.each(json.playlist, $.proxy(function(idx, song) {
-				if(song.song_type == 'sc') {
-					song.uri = new Uri(song.uri);
-					if(song.uri.host() == 'hypem.com' && song.uri.path().split("/")[1] == 'track') {
-						song.uri = 'http://hypem.com/go/sc/'+song.uri.path().split("/")[2];
-					}
-					resolves.push(
-						this.unshortenURI(song.uri, $.proxy(function(ruri) {
-							song.uri = ruri;
-						}, this))
-					);
+	Jammin.prototype.loadPlaylist = function(plObj) {
+		var resolves = new Array();
+		
+		$.each(plObj.playlist, $.proxy(function(idx, song) {
+			if(song.song_type == 'sc') {
+				song.uri = new Uri(song.uri);
+				if(song.uri.host() == 'hypem.com' && song.uri.path().split("/")[1] == 'track') {
+					song.uri = 'http://hypem.com/go/sc/'+song.uri.path().split("/")[2];
 				}
-			}, this));
-
-			$.when.apply($, resolves).done($.proxy(function() {
-				$.each(json.playlist, $.proxy(function(idx, song) {
-					song.uri = new Uri(song.uri);
-				}, this));
-				this.playlist.addSongs(json);
-			}, this));			
+				resolves.push(
+					this.unshortenURI(song.uri, $.proxy(function(ruri) {
+						song.uri = ruri;
+					}, this))
+				);
+			}
 		}, this));
+
+		$.when.apply($, resolves).done($.proxy(function() {
+			$.each(plObj.playlist, $.proxy(function(idx, song) {
+				song.uri = new Uri(song.uri);
+			}, this));
+			this.playlist.addSongs(plObj);
+		}, this));
+	}
+
+	Jammin.prototype.loadPlaylistByID = function(playlist_id) {
+		// TODO: clear current playlist, fix url, config file.
+		// $.getJSON(playlist_uri, $.proxy(function(json) {
+		// 	var resolves = new Array();
+			
+		// 	$.each(json.playlist, $.proxy(function(idx, song) {
+		// 		if(song.song_type == 'sc') {
+		// 			song.uri = new Uri(song.uri);
+		// 			if(song.uri.host() == 'hypem.com' && song.uri.path().split("/")[1] == 'track') {
+		// 				song.uri = 'http://hypem.com/go/sc/'+song.uri.path().split("/")[2];
+		// 			}
+		// 			resolves.push(
+		// 				this.unshortenURI(song.uri, $.proxy(function(ruri) {
+		// 					song.uri = ruri;
+		// 				}, this))
+		// 			);
+		// 		}
+		// 	}, this));
+
+		// 	$.when.apply($, resolves).done($.proxy(function() {
+		// 		$.each(json.playlist, $.proxy(function(idx, song) {
+		// 			song.uri = new Uri(song.uri);
+		// 		}, this));
+		// 		this.playlist.addSongs(json);
+		// 	}, this));			
+		// }, this));
 	}
 
 	Jammin.prototype.savePlaylist = function() {

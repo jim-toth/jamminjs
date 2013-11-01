@@ -5,7 +5,10 @@ var fs = require('fs');
 var _request = require('request');
 var MongoClient = require('mongodb').MongoClient;
 var format = require('util').format;
+var ltLog = require('ltLog');
 
+var logfilename = 'server.log';
+var loglevel = 5;
 var port = 80;
 var mongohost = 'localhost';
 var mongoport = 27017;
@@ -15,7 +18,8 @@ var basepath = '../app/';
 var whitelist = [
 	'/index.html',
 	'/style',
-	'/js'
+	'/js',
+	'/playlist.ejs'
 ];
 
 /**
@@ -71,10 +75,20 @@ function route( request, response ) {
 
 	// Allow direct file requests from whitelist or root directory from whitelist (only domain/root)
 	if( whitelist.indexOf(pathname) > -1 || whitelist.indexOf('/' + pathname.split('/')[1]) > -1 ) {
-		var file = fs.readFileSync(basepath + pathname);
-
-		response.writeHead(200, { "Content-Type": extToContentType(path.extname(pathname)) });
-		response.end(file);
+		fs.readFile(basepath + pathname, function (err, file) {
+			if(err) {
+				response.writeHead(500, { "Content-Type": "text/plain" });
+				response.write("Internal Server Error");
+				response.end();
+			} else {
+				response.writeHead(200, { "Content-Type": extToContentType(path.extname(pathname)) });
+				if(path.extname(pathname) == '.ejs') {
+					response.end(ejs.render(file));
+				} else {
+					response.end(file);	
+				}
+			}
+		});
 	} else {
 		response.writeHead(404, { "Content-Type": "text/plain" });
 		response.write("404");
@@ -83,7 +97,34 @@ function route( request, response ) {
 }
 
 /**
- * Handles /p/laylist GET requests.
+ * Fetches a playlist from the DB
+ */
+function mongoGetPlaylist( playlist_id, callback ) {
+	//Connect to the database
+	MongoClient.connect(format("mongodb://%s:%s/linktape", mongohost, mongoport), function(err, db) {
+		if(err) {
+			//Error occurred during connection, kick it back
+			ltLog.error('Could not connect to MongoDB in mongoGetPlaylist');
+			callback(err);
+		} else {
+			//Connected to database, get the playlist
+			ltLog.verbose("Attempting to find playlist with ID: " + playlist_id);
+			db.collection('playlists').findOne({"pid": playlist_id}, function(err, playlist) {
+				if(err) {
+					//Error occured during query
+					ltLog.error('Error during mongoGetPlaylist query');
+					callback(err);
+				} else {
+					//No error, but no guarantees the playlist exists
+					callback(err, playlist);
+				}
+			});
+		}
+	});
+}
+
+/**
+ * Handles /p/laylist GET requests through mongoGetPlaylist
  *
  * Sends 200 when GET and playlist has been found along with playlist JSON.
  * Sends 404 when GET and playlist has not been found.
@@ -98,41 +139,27 @@ function getPlaylist( request, response ) {
 		pid = pathpcs[2];
 	}
 
-	var playlistFound = false;
-
 	if(typeof pid != 'undefined') {
-		MongoClient.connect(format("mongodb://%s:%s/linktape", mongohost, mongoport), function(err, db) {
+		mongoGetPlaylist(pid, function ( err, playlist ) {
 			if(err) {
-				// Error while attempting to connect to Mongo
+				// Error while attempting to connect to or query Mongo
 				response.writeHead(500, { "Content-Type": "text/plain" });
 				response.write("An error has occurred.");
 				response.end();
-
-				console.log('Could not connect to Mongo DB!');
 			} else {
-				// Attempt to find playlist by ID and send the appropriate response.
-				console.log("Attempting to find playlist with ID: " + pid);
-				db.collection('playlists').findOne({"pid": pid}, function(err, playlist) {
-					if(err) { 
-						// Error while searching Mongo
-						response.writeHead(500, { "Content-Type": "text/plain" });
-						response.write("Could not connect to Mongo DB!");
-						response.end();
-					} else {
-						if(playlist != null) {
-							// Found playlist.
-							response.writeHead(200, { "Content-Type": "application/json" });
-							playlist._id = undefined;
-							response.write(JSON.stringify(playlist));
-							response.end();
-						} else {
-							// Could not find playlist.
-							response.writeHead(404, { "Content-Type": "text/plain" });
-							response.write("Could not find playlist.");
-							response.end();
-						}
-					}
-				});
+				// No errors connecting to mongo, but playlist may not exist
+				if(playlist != null) {
+					// Found playlist.
+					response.writeHead(200, { "Content-Type": "application/json" });
+					playlist._id = undefined;
+					response.write(JSON.stringify(playlist));
+					response.end();
+				} else {
+					// Could not find playlist.
+					response.writeHead(404, { "Content-Type": "text/plain" });
+					response.write("Could not find playlist.");
+					response.end();
+				}
 			}
 		});
 	} else {
@@ -151,71 +178,92 @@ function getPlaylist( request, response ) {
  * Sends 200 OK when saved successfully.
  */
 function savePlaylist( request, response ) {
-	if(request.headers["content-length"] > 0) {
-		// Request data is sent in chunks if it is too big.
-		// Data must be handled through events.
-		var data = '';
+	var newPID = genSlug();
+	
+	//Connect to the database, verify the slug has not collided	
+	MongoClient.connect(format("mongodb://%s:%s/linktape", mongohost, mongoport), function(err, db) {
+		if(err) {
+			// Error while attempting to connect to Mongo
+			response.writeHead(500, { "Content-Type": "text/plain" });
+			response.write("An error has occurred.");
+			response.end();
 
-		// Received a chunk, concatenate.
-		request.on('data', function(chunk) {
-			data += chunk;
-		});
-
-		// Done receiving data, attempt to save playlist
-		request.on('end', function() {
-			var json = JSON.parse(data);
-			
-			var pl = new Object();
-			pl.pid = genSlug();
-			pl.name = json.name;
-			pl.playlist = new Array();
-
-			for(var i = 0; i < json.playlist.length; i++) {
-				pl.playlist[i] = new Object();
-				pl.playlist[i].title = json.playlist[i].title;
-				pl.playlist[i].artist = json.playlist[i].artist;
-				pl.playlist[i].uri = json.playlist[i].uri;
-				pl.playlist[i].song_type = json.playlist[i].song_type;
-				pl.playlist[i].video_id = json.playlist[i].video_id;
-			}
-
-			console.log("SAVING PLAYLIST:\n\n");
-			console.log(pl);
-
-			MongoClient.connect(format("mongodb://%s:%s/linktape", mongohost, mongoport), function(err, db) {
+			ltLog.error('Could not connect to Mongo DB!');
+		} else {
+			// Connection successful, check for collision
+			db.collection('playlists').count({"pid" : newPID}, function (err, count) {
 				if(err) {
-					// Error while attempting to connect to Mongo
+					// Error while attempting to access database
 					response.writeHead(500, { "Content-Type": "text/plain" });
 					response.write("An error has occurred.");
 					response.end();
-
-					console.log('Could not connect to Mongo DB!');
 				} else {
-					// Connection successful, attempt to save playlist.
-					// TODO: Check for collisions here.
-					db.collection('playlists').insert(pl, function(err, what) {
-						if(err) {
-							// Error while attempting to connect to Mongo
-							response.writeHead(500, { "Content-Type": "text/plain" });
-							response.write("An error has occurred.");
-							response.end();
+					//Got a count of the number of collisions, if it's zero, proceed
+					if(count == 0) {
+						//Build and save the playlist
+						if(request.headers["content-length"] > 0) {
+							// Request data is sent in chunks if it is too big.
+							// Data must be handled through events.
+							var data = '';
 
-							console.log('Could not connect to Mongo DB!');
+							// Received a chunk, concatenate.
+							request.on('data', function(chunk) {
+									data += chunk;
+							});
+
+							// Done receiving data, attempt to save playlist
+							request.on('end', function() {
+								var json = JSON.parse(data);
+				
+								var pl = new Object();
+								pl.pid = newPID;
+								pl.name = json.name;
+								pl.playlist = new Array();
+
+								for(var i = 0; i < json.playlist.length; i++) {
+									pl.playlist[i] = new Object();
+									pl.playlist[i].title = json.playlist[i].title;
+									pl.playlist[i].artist = json.playlist[i].artist;
+									pl.playlist[i].uri = json.playlist[i].uri;
+									pl.playlist[i].song_type = json.playlist[i].song_type;
+									pl.playlist[i].video_id = json.playlist[i].video_id;
+								}
+
+								ltLog.dev("SAVING PLAYLIST:");
+								ltLog.dev(pl.pid);
+
+								//Insert the playlist				
+								db.collection('playlists').insert(pl, function(err, what) {
+									if(err) {
+											// Error while attempting to connect to Mongo
+											response.writeHead(500, { "Content-Type": "text/plain" });
+											response.write("An error has occurred.");
+											response.end();
+
+											ltLog.error('Could not connect to Mongo DB!');
+										} else {
+											response.writeHead(200, { "Content-Type": "application/json" });
+											response.write(JSON.stringify({ "pid": pl.pid }));
+											response.end();
+										}
+								});
+							});
 						} else {
-							response.writeHead(200, { "Content-Type": "application/json" });
-							response.write(JSON.stringify({ "pid": pl.pid }));
+							// No data sent, yell at them
+							response.writeHead(400, { "Content-Type": "text/plain" });
+							response.write('400 Bad Request: No data sent.');
 							response.end();
 						}
-					});
+					} else {
+						//Count is not zero, collision detected
+						//Recurse the function and try again
+						ltLog.dev("Collision Detected");
+						savePlaylist( request, response );
+					}
 				}
 			});
-		});
-	} else {
-		// No data sent, yell at them
-		response.writeHead(400, { "Content-Type": "text/plain" });
-		response.write('400 Bad Request: No data sent.');
-		response.end();
-	}
+		}
+	});        
 }
 
 /**
@@ -282,20 +330,26 @@ function routeUnshorten( request, response ) {
  * Else forwards to route.
  */
 function onRequest( request, response ) {
-	var pathname = url.parse(request.url).pathname;
-	var pathpcs = pathname.split('/');
+	try {
+		var pathname = url.parse(request.url).pathname;
+		var pathpcs = pathname.split('/');
 
-	// TODO: Check if /p/ or /u/ requests come from this domain.
-	if(pathpcs[1] == 'p') {
-		routePlaylist(request, response);
-	} else if(pathpcs[1] == 'u') {
-		routeUnshorten(request, response);
-	} else {
-		route(request, response);
+		// TODO: Check if /p/ or /u/ requests come from this domain.
+		if(pathpcs[1] == 'p') {
+			routePlaylist(request, response);
+		} else if(pathpcs[1] == 'u') {
+			routeUnshorten(request, response);
+		} else {
+			route(request, response);
+		}
+	} catch (err) {
+		ltLog.error(err);
 	}
 }
 
+// Start logger
+ltLog.startLogger(logfilename, loglevel);
 // Create and listen
 http.createServer(onRequest).listen(port);
 
-console.log("\nStarted");
+ltLog.prod("Started");
