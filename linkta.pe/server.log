@@ -288,3 +288,147 @@ title is not defined
 [DEV][Fri Nov 01 2013 00:57:33]: Serving /js/app/playlist.js
 [DEV][Fri Nov 01 2013 00:57:33]: Serving /js/lib/jqueryui.js
 [DEV][Fri Nov 01 2013 00:57:33]: Serving /js/app/jamdisplay.js
+[DEV][Fri Nov 01 2013 01:02:57]: Serving /playlist.ejs
+[DEV][Fri Nov 01 2013 01:02:57]: Serving /style/jammin.css
+[DEV][Fri Nov 01 2013 01:02:57]: Serving /js/lib/jsuri.js
+[DEV][Fri Nov 01 2013 01:02:57]: Serving /js/lib/require.js
+[DEV][Fri Nov 01 2013 01:02:57]: Serving /js/app.js
+[DEV][Fri Nov 01 2013 01:02:57]: Serving /js/app/main.js
+[DEV][Fri Nov 01 2013 01:02:57]: Serving /js/app/jammin.js
+[DEV][Fri Nov 01 2013 01:02:57]: Serving /js/lib/arrayinsert.js
+[VERBOSE][Fri Nov 01 2013 01:02:57]: Attempting to find playlist with ID: favicon.ico
+[DEV][Fri Nov 01 2013 01:02:57]: Serving /js/lib/jquery.js
+[DEV][Fri Nov 01 2013 01:02:57]: Serving /js/app/song.js
+[DEV][Fri Nov 01 2013 01:02:57]: Serving /js/app/playlist.js
+[DEV][Fri Nov 01 2013 01:02:57]: TypeError: Cannot read property 'name' of null
+[PROD][Fri Nov 01 2013 01:02:57]: Serving playlist favicon.ico
+[DEV][Fri Nov 01 2013 01:02:57]: Serving /js/lib/jqueryui.js
+[DEV][Fri Nov 01 2013 01:02:57]: Serving /js/app/jamdisplay.js
+[DEV][Fri Nov 01 2013 01:03:52]: Serving /playlist.ejs
+[DEV][Fri Nov 01 2013 01:03:52]: Serving /js/lib/jsuri.js
+[DEV][Fri Nov 01 2013 01:03:52]: Serving /js/lib/require.js
+[DEV][Fri Nov 01 2013 01:03:52]: Serving /style/jammin.css
+[DEV][Fri Nov 01 2013 01:03:52]: Serving /js/app.js
+[DEV][Fri Nov 01 2013 01:03:52]: Serving /js/app/main.js
+[DEV][Fri Nov 01 2013 01:03:52]: Serving /js/app/jammin.js
+[DEV][Fri Nov 01 2013 01:03:52]: Serving /js/lib/arrayinsert.js
+[DEV][Fri Nov 01 2013 01:03:52]: Serving /js/lib/jquery.js
+[DEV][Fri Nov 01 2013 01:03:52]: Serving /js/app/song.js
+[DEV][Fri Nov 01 2013 01:03:52]: Serving /js/app/playlist.js
+[DEV][Fri Nov 01 2013 01:03:52]: Serving /js/lib/jqueryui.js
+[DEV][Fri Nov 01 2013 01:03:52]: Serving /js/app/jamdisplay.js
+[VERBOSE][Fri Nov 01 2013 01:04:04]: Attempting to find playlist with ID: localhost
+[PROD][Fri Nov 01 2013 01:04:04]: Serving playlist localhost
+[DEV][Fri Nov 01 2013 01:04:04]: TypeError: Cannot read property 'name' of null
+[VERBOSE][Fri Nov 01 2013 01:04:57]: Attempting to find playlist with ID: favicon.ico
+[PROD][Fri Nov 01 2013 01:04:57]: Serving playlist favicon.ico
+[DEV][Fri Nov 01 2013 01:04:57]: TypeError: Cannot read property 'name' of null
+[VERBOSE][Fri Nov 01 2013 01:06:04]: Attempting to find playlist with ID: localhost
+[PROD][Fri Nov 01 2013 01:06:04]: Serving playlist localhost
+[DEV][Fri Nov 01 2013 01:06:04]: TypeError: Cannot read property 'name' of null
+[PROD][Fri Nov 01 2013 01:06:11]: Started
+[VERBOSE][Fri Nov 01 2013 01:06:12]: Attempting to find playlist with ID: favicon.ico
+[PROD][Fri Nov 01 2013 01:06:12]: Serving playlist favicon.ico
+[DEV][Fri Nov 01 2013 01:06:12]: TypeError: Cannot read property 'name' of null
+[DEV][Fri Nov 01 2013 01:06:16]: Serving /playlist.ejs
+[DEV][Fri Nov 01 2013 01:06:16]: Serving /style/jammin.css
+[DEV][Fri Nov 01 2013 01:06:16]: Serving /js/lib/jsuri.js
+[DEV][Fri Nov 01 2013 01:06:16]: Serving /js/lib/require.js
+[DEV][Fri Nov 01 2013 01:06:16]: Serving /js/app.js
+[DEV][Fri Nov 01 2013 01:06:16]: Serving /js/app/main.js
+[DEV][Fri Nov 01 2013 01:06:16]: Serving /js/app/jammin.js
+[DEV][Fri Nov 01 2013 01:06:16]: Serving /js/lib/arrayinsert.js
+[DEV][Fri Nov 01 2013 01:06:16]: Serving /js/lib/jquery.js
+[DEV][Fri Nov 01 2013 01:06:16]: Serving /js/app/song.js
+[DEV][Fri Nov 01 2013 01:06:16]: Serving /js/app/playlist.js
+[DEV][Fri Nov 01 2013 01:06:16]: Serving /js/lib/jqueryui.js
+[DEV][Fri Nov 01 2013 01:06:16]: Serving /js/app/jamdisplay.js
+[VERBOSE][Fri Nov 01 2013 01:06:46]: Attempting to find playlist with ID: null
+[PROD][Fri Nov 01 2013 01:06:46]: Serving playlist null
+[DEV][Fri Nov 01 2013 01:06:46]: TypeError: Cannot read property 'name' of null
+[VERBOSE][Fri Nov 01 2013 01:06:55]: Attempting to find playlist with ID: localhost
+[PROD][Fri Nov 01 2013 01:06:55]: Serving playlist localhost
+[DEV][Fri Nov 01 2013 01:06:55]: TypeError: Cannot read property 'name' of null
+[VERBOSE][Fri Nov 01 2013 01:08:12]: Attempting to find playlist with ID: favicon.ico
+[PROD][Fri Nov 01 2013 01:08:12]: Serving playlist favicon.ico
+[DEV][Fri Nov 01 2013 01:08:12]: TypeError: Cannot read property 'name' of null
+[VERBOSE][Fri Nov 01 2013 01:08:46]: Attempting to find playlist with ID: null
+[PROD][Fri Nov 01 2013 01:08:46]: Serving playlist null
+[DEV][Fri Nov 01 2013 01:08:46]: TypeError: Cannot read property 'name' of null
+[VERBOSE][Fri Nov 01 2013 01:08:55]: Attempting to find playlist with ID: localhost
+[PROD][Fri Nov 01 2013 01:08:55]: Serving playlist localhost
+[DEV][Fri Nov 01 2013 01:08:55]: TypeError: Cannot read property 'name' of null
+[PROD][Fri Nov 01 2013 01:09:34]: Started
+[VERBOSE][Fri Nov 01 2013 01:09:34]: Attempting to find playlist with ID: favicon.ico
+[PROD][Fri Nov 01 2013 01:09:34]: Serving playlist favicon.ico
+[DEV][Fri Nov 01 2013 01:09:34]: TypeError: Cannot read property 'name' of null
+[VERBOSE][Fri Nov 01 2013 01:09:46]: Attempting to find playlist with ID: localhost
+[PROD][Fri Nov 01 2013 01:09:46]: Serving playlist localhost
+[DEV][Fri Nov 01 2013 01:09:46]: TypeError: Cannot read property 'name' of null
+[PROD][Fri Nov 01 2013 01:11:18]: Started
+[DEV][Fri Nov 01 2013 01:11:20]: Serving /playlist.ejs
+[DEV][Fri Nov 01 2013 01:11:20]: Serving /style/jammin.css
+[DEV][Fri Nov 01 2013 01:11:20]: Serving /js/lib/jsuri.js
+[DEV][Fri Nov 01 2013 01:11:20]: Serving /js/lib/require.js
+[DEV][Fri Nov 01 2013 01:11:21]: Serving /js/app.js
+[DEV][Fri Nov 01 2013 01:11:21]: Serving /js/app/main.js
+[VERBOSE][Fri Nov 01 2013 01:11:21]: Attempting to find playlist with ID: favicon.ico
+[DEV][Fri Nov 01 2013 01:11:21]: Serving /js/app/jammin.js
+[PROD][Fri Nov 01 2013 01:11:21]: Serving playlist favicon.ico
+[DEV][Fri Nov 01 2013 01:11:21]: TypeError: Cannot read property 'name' of null
+[DEV][Fri Nov 01 2013 01:11:21]: Serving /js/lib/arrayinsert.js
+[DEV][Fri Nov 01 2013 01:11:21]: Serving /js/lib/jquery.js
+[DEV][Fri Nov 01 2013 01:11:21]: Serving /js/app/song.js
+[DEV][Fri Nov 01 2013 01:11:21]: Serving /js/app/playlist.js
+[DEV][Fri Nov 01 2013 01:11:21]: Serving /js/lib/jqueryui.js
+[DEV][Fri Nov 01 2013 01:11:21]: Serving /js/app/jamdisplay.js
+[DEV][Fri Nov 01 2013 01:11:28]: [object Object]
+[DEV][Fri Nov 01 2013 01:11:28]: Saving playlist g0xv2hzc3
+[VERBOSE][Fri Nov 01 2013 01:12:04]: Attempting to find playlist with ID: g0xv2hzc3
+[PROD][Fri Nov 01 2013 01:12:04]: Serving playlist g0xv2hzc3
+[DEV][Fri Nov 01 2013 01:12:04]: Serving /style/jammin.css
+[DEV][Fri Nov 01 2013 01:12:04]: Serving /js/lib/jsuri.js
+[DEV][Fri Nov 01 2013 01:12:04]: Serving /js/lib/require.js
+[DEV][Fri Nov 01 2013 01:12:04]: Serving /js/app.js
+[DEV][Fri Nov 01 2013 01:12:04]: Serving /js/app/main.js
+[DEV][Fri Nov 01 2013 01:12:04]: Serving /js/app/jammin.js
+[DEV][Fri Nov 01 2013 01:12:04]: Serving /js/lib/arrayinsert.js
+[DEV][Fri Nov 01 2013 01:12:04]: Serving /js/app/song.js
+[DEV][Fri Nov 01 2013 01:12:04]: Serving /js/app/playlist.js
+[DEV][Fri Nov 01 2013 01:12:04]: Serving /js/lib/jquery.js
+[DEV][Fri Nov 01 2013 01:12:04]: Serving /js/app/jamdisplay.js
+[DEV][Fri Nov 01 2013 01:12:04]: Serving /js/lib/jqueryui.js
+[VERBOSE][Fri Nov 01 2013 01:13:19]: Attempting to find playlist with ID: g0xv2hzc3
+[PROD][Fri Nov 01 2013 01:13:19]: Serving playlist g0xv2hzc3
+[DEV][Fri Nov 01 2013 01:13:19]: Serving /style/jammin.css
+[DEV][Fri Nov 01 2013 01:13:19]: Serving /js/lib/jsuri.js
+[DEV][Fri Nov 01 2013 01:13:19]: Serving /js/lib/require.js
+[DEV][Fri Nov 01 2013 01:13:19]: Serving /js/app.js
+[DEV][Fri Nov 01 2013 01:13:19]: Serving /js/app/main.js
+[DEV][Fri Nov 01 2013 01:13:19]: Serving /js/app/jammin.js
+[DEV][Fri Nov 01 2013 01:13:19]: Serving /js/lib/arrayinsert.js
+[DEV][Fri Nov 01 2013 01:13:19]: Serving /js/lib/jquery.js
+[DEV][Fri Nov 01 2013 01:13:19]: Serving /js/app/song.js
+[DEV][Fri Nov 01 2013 01:13:19]: Serving /js/app/playlist.js
+[DEV][Fri Nov 01 2013 01:13:19]: Serving /js/lib/jqueryui.js
+[DEV][Fri Nov 01 2013 01:13:19]: Serving /js/app/jamdisplay.js
+[VERBOSE][Fri Nov 01 2013 01:13:21]: Attempting to find playlist with ID: favicon.ico
+[PROD][Fri Nov 01 2013 01:13:21]: Serving playlist favicon.ico
+[DEV][Fri Nov 01 2013 01:13:21]: TypeError: Cannot read property 'name' of null
+[VERBOSE][Fri Nov 01 2013 01:14:16]: Attempting to find playlist with ID: g0xv2hzc3
+[PROD][Fri Nov 01 2013 01:14:16]: Serving playlist g0xv2hzc3
+[DEV][Fri Nov 01 2013 01:14:16]: Serving /style/jammin.css
+[DEV][Fri Nov 01 2013 01:14:16]: Serving /js/lib/jsuri.js
+[DEV][Fri Nov 01 2013 01:14:16]: Serving /js/lib/require.js
+[DEV][Fri Nov 01 2013 01:14:17]: Serving /js/app.js
+[DEV][Fri Nov 01 2013 01:14:17]: Serving /js/app/main.js
+[DEV][Fri Nov 01 2013 01:14:17]: Serving /js/app/jammin.js
+[DEV][Fri Nov 01 2013 01:14:17]: Serving /js/lib/arrayinsert.js
+[DEV][Fri Nov 01 2013 01:14:17]: Serving /js/lib/jquery.js
+[DEV][Fri Nov 01 2013 01:14:17]: Serving /js/app/song.js
+[DEV][Fri Nov 01 2013 01:14:17]: Serving /js/app/playlist.js
+[DEV][Fri Nov 01 2013 01:14:17]: Serving /js/lib/jqueryui.js
+[DEV][Fri Nov 01 2013 01:14:17]: Serving /js/app/jamdisplay.js
+[VERBOSE][Fri Nov 01 2013 01:15:21]: Attempting to find playlist with ID: favicon.ico
+[PROD][Fri Nov 01 2013 01:15:21]: Serving playlist favicon.ico
+[DEV][Fri Nov 01 2013 01:15:21]: TypeError: Cannot read property 'name' of null

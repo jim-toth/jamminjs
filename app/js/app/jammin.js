@@ -1,6 +1,8 @@
 define(["app/song", "app/playlist"], function(Song, Playlist) {
 	var SC_API_KEY = '8320c8fe21f98b89ad50068014b92068';
 
+	var server = 'localhost';
+
 	var Jammin = function (div, init_playlist) {
 		this.container = div;
 		this.init_playlist = init_playlist;
@@ -141,7 +143,7 @@ define(["app/song", "app/playlist"], function(Song, Playlist) {
 	Jammin.prototype.unshortenURI = function(short_uri, callback) {
 		return $.ajax({
 			type: 'GET',
-			url: 'http://api.unshort.me/unshorten?r='+short_uri.toString()+'&api_key=e4a749627720e8c0f782f9331b28acad&format=jsonp',
+			url: '/u?r=' + short_uri.toString(),
 			contentType: "application/json",
 			dataType: 'jsonp',
 			success: function(json) {
@@ -219,13 +221,13 @@ define(["app/song", "app/playlist"], function(Song, Playlist) {
 	Jammin.prototype.savePlaylist = function() {
 		$.ajax({
 			type: 'POST',
-			url: server + '/p',
+			url: '/p',
 			dataType: 'json',
 			data: JSON.stringify(this.playlist.toPlainObject()),
 			success: function(data, textStatus, jqXHR) {
 				console.log(data);
 				console.log(textStatus);
-				console.log(jaXHR);
+				console.log(jqXHR);
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 				console.log(jqXHR);

@@ -305,10 +305,10 @@ function savePlaylist(request, response) {
 							// Done receiving data, attempt to save playlist
 							request.on('end', function() {
 								var json = JSON.parse(data);
-
+								ltLog.dev(json);
 								var pl = new Object();
 								pl.pid = newPID;
-								pl.name = json.name;
+								pl.name = json.name || 'Untitled Playlist';
 								pl.playlist = new Array();
 
 								for (var i = 0; i < json.playlist.length; i++) {
