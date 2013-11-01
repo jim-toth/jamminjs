@@ -6,6 +6,7 @@ var _request = require('request');
 var MongoClient = require('mongodb').MongoClient;
 var format = require('util').format;
 var ltLog = require('ltLog');
+var ejs = require('ejs');
 
 var logfilename = 'server.log';
 var loglevel = 5;
@@ -30,6 +31,9 @@ function extToContentType( ext ) {
 
 	switch(ext) {
 		case '.html':
+			contentType = "text/html";
+			break;
+		case '.ejs':
 			contentType = "text/html";
 			break;
 		case '.css':
@@ -73,23 +77,49 @@ function route( request, response ) {
 		pathname = '/index.html';
 	}
 
+	if(pathname == '/index.html') {
+		pathname = '/playlist.ejs';
+	}
+
 	// Allow direct file requests from whitelist or root directory from whitelist (only domain/root)
 	if( whitelist.indexOf(pathname) > -1 || whitelist.indexOf('/' + pathname.split('/')[1]) > -1 ) {
-		fs.readFile(basepath + pathname, function (err, file) {
-			if(err) {
-				response.writeHead(500, { "Content-Type": "text/plain" });
-				response.write("Internal Server Error");
-				response.end();
-			} else {
-				response.writeHead(200, { "Content-Type": extToContentType(path.extname(pathname)) });
-				if(path.extname(pathname) == '.ejs') {
-					response.end(ejs.render(file));
+		var fileopts = {};
+		if(path.extname(pathname) == '.ejs') {
+			fileopts["encoding"] = 'utf8';
+		}
+
+		try {
+			fs.readFile(basepath + pathname, fileopts, function (err, file) {
+				if(err) {
+					ltLog.error(err);
+					response.writeHead(500, { "Content-Type": "text/plain" });
+					response.write("Internal Server Error");
+					response.end();
 				} else {
-					response.end(file);	
+					ltLog.dev('Serving ' + pathname);
+					response.writeHead(200, { "Content-Type": extToContentType(path.extname(pathname)) });
+					if(path.extname(pathname) == '.ejs') {
+						try {
+							response.end(ejs.render(file, { "title" : "LINKTA.PE" }));
+						} catch(e) {
+							ltLog.error(e);
+							response.writeHead(500, { "Content-Type": "text/plain" });
+							response.write("Internal Server Error");
+							response.end();
+						}
+					} else {
+						response.end(file);
+					}
 				}
-			}
-		});
+			});
+		} catch(e) {
+			ltLog.error(e);
+			response.writeHead(500, { "Content-Type": "text/plain" });
+			response.write("Internal Server Error");
+			response.end();
+		}
 	} else {
+		ltLog.prod('Denied request for ' + pathname);
 		response.writeHead(404, { "Content-Type": "text/plain" });
 		response.write("404");
 		response.end();

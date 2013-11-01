@@ -4,7 +4,7 @@
 		<script type="text/javascript" src="http://connect.soundcloud.com/sdk.js"></script>
 		<script type="text/javascript" src="https://w.soundcloud.com/player/api.js"></script>
 		<script type="text/javascript">
-			var LINKTAPE_INIT_PLAYLIST = <%= init_playlist %>;
+			//var LINKTAPE_INIT_PLAYLIST = <%= (typeof init_playlist == 'undefined') ? {} : init_playlist %>;
 		</script>
 		<script type="text/javascript" src="js/lib/jsuri.js"></script>
 		<script data-main="js/app" src="js/lib/require.js"></script>

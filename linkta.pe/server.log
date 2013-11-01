@@ -2,3 +2,74 @@
 [VERBOSE][Thu Oct 31 2013 22:10:51]: Attempting to find playlist with ID: test
 [VERBOSE][Thu Oct 31 2013 22:11:05]: Attempting to find playlist with ID: savetest
 [VERBOSE][Thu Oct 31 2013 22:11:11]: Attempting to find playlist with ID: test
+[PROD][Thu Oct 31 2013 22:22:51]: Started
+[DEV][Thu Oct 31 2013 22:22:55]: Serving /index.html
+[DEV][Thu Oct 31 2013 22:22:56]: Serving /style/jammin.css
+[DEV][Thu Oct 31 2013 22:22:56]: Serving /js/lib/jsuri.js
+[DEV][Thu Oct 31 2013 22:22:56]: Serving /js/lib/require.js
+[DEV][Thu Oct 31 2013 22:22:56]: Serving /js/app.js
+[DEV][Thu Oct 31 2013 22:22:56]: Serving /js/app/main.js
+[DEV][Thu Oct 31 2013 22:22:56]: Serving /js/lib/arrayinsert.js
+[DEV][Thu Oct 31 2013 22:22:56]: Serving /js/app/jammin.js
+[DEV][Thu Oct 31 2013 22:22:56]: Serving /js/app/song.js
+[DEV][Thu Oct 31 2013 22:22:56]: Serving /js/lib/jquery.js
+[DEV][Thu Oct 31 2013 22:22:56]: Serving /js/app/playlist.js
+[DEV][Thu Oct 31 2013 22:22:56]: Serving /js/lib/jqueryui.js
+[DEV][Thu Oct 31 2013 22:22:56]: Serving /js/app/jamdisplay.js
+[PROD][Thu Oct 31 2013 22:24:56]: Started
+[PROD][Thu Oct 31 2013 22:25:52]: Started
+[PROD][Thu Oct 31 2013 22:31:56]: Started
+[PROD][Thu Oct 31 2013 22:32:18]: Started
+[PROD][Thu Oct 31 2013 22:33:16]: Started
+[DEV][Thu Oct 31 2013 22:33:19]: [object Object]
+[PROD][Thu Oct 31 2013 22:34:10]: Started
+[DEV][Thu Oct 31 2013 22:34:12]: eoncoding => undefined
+[PROD][Thu Oct 31 2013 22:35:10]: Started
+[PROD][Thu Oct 31 2013 22:35:38]: Started
+[DEV][Thu Oct 31 2013 22:35:41]: PATHNAMEextname => .ejs
+[PROD][Thu Oct 31 2013 22:36:17]: Started
+[PROD][Thu Oct 31 2013 22:37:51]: Started
+[PROD][Thu Oct 31 2013 22:41:02]: Started
+[DEV][Thu Oct 31 2013 22:41:05]: Serving /playlist.ejs
+[ERROR][Thu Oct 31 2013 22:41:05]: SyntaxError: Unexpected token ; while compiling ejs
+[PROD][Thu Oct 31 2013 22:41:20]: Started
+[DEV][Thu Oct 31 2013 22:41:23]: Serving /playlist.ejs
+[ERROR][Thu Oct 31 2013 22:41:23]: ReferenceError: ejs:12
+    10| 		<script data-main="js/app" src="js/lib/require.js"></script>
+    11| 
+ >> 12| 		<title><%= title %></title>
+    13| 	</head>
+    14| 	<body>
+    15| 		<div id='jamz'></div>
+
+title is not defined
+[PROD][Thu Oct 31 2013 22:41:52]: Started
+[DEV][Thu Oct 31 2013 22:41:55]: Serving /playlist.ejs
+[PROD][Thu Oct 31 2013 22:42:21]: Started
+[DEV][Thu Oct 31 2013 22:42:24]: Serving /playlist.ejs
+[DEV][Thu Oct 31 2013 22:42:24]: Serving /style/jammin.css
+[DEV][Thu Oct 31 2013 22:42:24]: Serving /js/lib/jsuri.js
+[DEV][Thu Oct 31 2013 22:42:24]: Serving /js/lib/require.js
+[DEV][Thu Oct 31 2013 22:42:25]: Serving /js/app.js
+[DEV][Thu Oct 31 2013 22:42:25]: Serving /js/app/main.js
+[DEV][Thu Oct 31 2013 22:42:25]: Serving /js/app/jammin.js
+[DEV][Thu Oct 31 2013 22:42:25]: Serving /js/lib/arrayinsert.js
+[DEV][Thu Oct 31 2013 22:42:25]: Serving /js/lib/jquery.js
+[DEV][Thu Oct 31 2013 22:42:25]: Serving /js/app/song.js
+[DEV][Thu Oct 31 2013 22:42:25]: Serving /js/app/playlist.js
+[DEV][Thu Oct 31 2013 22:42:25]: Serving /js/lib/jqueryui.js
+[DEV][Thu Oct 31 2013 22:42:25]: Serving /js/app/jamdisplay.js
+[PROD][Thu Oct 31 2013 22:42:49]: Started
+[DEV][Thu Oct 31 2013 22:42:52]: Serving /playlist.ejs
+[DEV][Thu Oct 31 2013 22:42:52]: Serving /style/jammin.css
+[DEV][Thu Oct 31 2013 22:42:52]: Serving /js/lib/jsuri.js
+[DEV][Thu Oct 31 2013 22:42:52]: Serving /js/lib/require.js
+[DEV][Thu Oct 31 2013 22:42:52]: Serving /js/app.js
+[DEV][Thu Oct 31 2013 22:42:52]: Serving /js/app/main.js
+[DEV][Thu Oct 31 2013 22:42:52]: Serving /js/app/jammin.js
+[DEV][Thu Oct 31 2013 22:42:52]: Serving /js/lib/arrayinsert.js
+[DEV][Thu Oct 31 2013 22:42:52]: Serving /js/lib/jquery.js
+[DEV][Thu Oct 31 2013 22:42:52]: Serving /js/app/song.js
+[DEV][Thu Oct 31 2013 22:42:52]: Serving /js/app/playlist.js
+[DEV][Thu Oct 31 2013 22:42:52]: Serving /js/lib/jqueryui.js
+[DEV][Thu Oct 31 2013 22:42:52]: Serving /js/app/jamdisplay.js
