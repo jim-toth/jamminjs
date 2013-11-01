@@ -73,3 +73,218 @@ title is not defined
 [DEV][Thu Oct 31 2013 22:42:52]: Serving /js/app/playlist.js
 [DEV][Thu Oct 31 2013 22:42:52]: Serving /js/lib/jqueryui.js
 [DEV][Thu Oct 31 2013 22:42:52]: Serving /js/app/jamdisplay.js
+[PROD][Thu Oct 31 2013 22:50:34]: Started
+[DEV][Thu Oct 31 2013 22:50:36]: Serving /playlist.ejs
+[DEV][Thu Oct 31 2013 22:50:36]: Serving /style/jammin.css
+[DEV][Thu Oct 31 2013 22:50:36]: Serving /js/lib/jsuri.js
+[DEV][Thu Oct 31 2013 22:50:36]: Serving /js/lib/require.js
+[DEV][Thu Oct 31 2013 22:50:37]: Serving /js/app.js
+[DEV][Thu Oct 31 2013 22:50:37]: Serving /js/app/main.js
+[DEV][Thu Oct 31 2013 22:50:37]: Serving /js/app/jammin.js
+[DEV][Thu Oct 31 2013 22:50:37]: Serving /js/lib/arrayinsert.js
+[DEV][Thu Oct 31 2013 22:50:37]: Serving /js/lib/jquery.js
+[DEV][Thu Oct 31 2013 22:50:37]: Serving /js/app/song.js
+[DEV][Thu Oct 31 2013 22:50:37]: Serving /js/app/playlist.js
+[DEV][Thu Oct 31 2013 22:50:37]: Serving /js/lib/jqueryui.js
+[DEV][Thu Oct 31 2013 22:50:37]: Serving /js/app/jamdisplay.js
+[DEV][Thu Oct 31 2013 22:51:54]: Serving /playlist.ejs
+[DEV][Thu Oct 31 2013 22:51:54]: Serving /style/jammin.css
+[DEV][Thu Oct 31 2013 22:51:54]: Serving /js/lib/jsuri.js
+[DEV][Thu Oct 31 2013 22:51:54]: Serving /js/lib/require.js
+[DEV][Thu Oct 31 2013 22:51:55]: Serving /js/app.js
+[DEV][Thu Oct 31 2013 22:51:55]: Serving /js/app/main.js
+[DEV][Thu Oct 31 2013 22:51:55]: Serving /js/lib/arrayinsert.js
+[DEV][Thu Oct 31 2013 22:51:55]: Serving /js/app/jammin.js
+[DEV][Thu Oct 31 2013 22:51:55]: Serving /js/lib/jquery.js
+[DEV][Thu Oct 31 2013 22:51:55]: Serving /js/app/song.js
+[DEV][Thu Oct 31 2013 22:51:55]: Serving /js/app/playlist.js
+[DEV][Thu Oct 31 2013 22:51:55]: Serving /js/lib/jqueryui.js
+[DEV][Thu Oct 31 2013 22:51:55]: Serving /js/app/jamdisplay.js
+[DEV][Thu Oct 31 2013 22:53:24]: Serving /playlist.ejs
+[DEV][Thu Oct 31 2013 22:53:24]: Serving /style/jammin.css
+[DEV][Thu Oct 31 2013 22:53:24]: Serving /js/lib/jsuri.js
+[DEV][Thu Oct 31 2013 22:53:24]: Serving /js/lib/require.js
+[DEV][Thu Oct 31 2013 22:53:25]: Serving /js/app.js
+[DEV][Thu Oct 31 2013 22:53:25]: Serving /js/app/main.js
+[DEV][Thu Oct 31 2013 22:53:25]: Serving /js/app/jammin.js
+[DEV][Thu Oct 31 2013 22:53:25]: Serving /js/lib/arrayinsert.js
+[DEV][Thu Oct 31 2013 22:53:25]: Serving /js/lib/jquery.js
+[DEV][Thu Oct 31 2013 22:53:25]: Serving /js/app/playlist.js
+[DEV][Thu Oct 31 2013 22:53:25]: Serving /js/app/song.js
+[DEV][Thu Oct 31 2013 22:53:25]: Serving /js/lib/jqueryui.js
+[DEV][Thu Oct 31 2013 22:53:25]: Serving /js/app/jamdisplay.js
+[DEV][Thu Oct 31 2013 22:53:34]: Serving /playlist.ejs
+[DEV][Thu Oct 31 2013 22:53:34]: Serving /style/jammin.css
+[DEV][Thu Oct 31 2013 22:53:34]: Serving /js/lib/jsuri.js
+[DEV][Thu Oct 31 2013 22:53:34]: Serving /js/lib/require.js
+[DEV][Thu Oct 31 2013 22:53:35]: Serving /js/app.js
+[DEV][Thu Oct 31 2013 22:53:35]: Serving /js/app/main.js
+[DEV][Thu Oct 31 2013 22:53:35]: Serving /js/app/jammin.js
+[DEV][Thu Oct 31 2013 22:53:35]: Serving /js/lib/arrayinsert.js
+[DEV][Thu Oct 31 2013 22:53:35]: Serving /js/lib/jquery.js
+[DEV][Thu Oct 31 2013 22:53:35]: Serving /js/app/song.js
+[DEV][Thu Oct 31 2013 22:53:35]: Serving /js/app/playlist.js
+[DEV][Thu Oct 31 2013 22:53:35]: Serving /js/lib/jqueryui.js
+[DEV][Thu Oct 31 2013 22:53:35]: Serving /js/app/jamdisplay.js
+[PROD][Fri Nov 01 2013 00:25:38]: Started
+[PROD][Fri Nov 01 2013 00:28:40]: Started
+[PROD][Fri Nov 01 2013 00:28:42]: Started
+[DEV][Fri Nov 01 2013 00:28:48]: Serving /playlist.ejs
+[DEV][Fri Nov 01 2013 00:28:48]: Serving /style/jammin.css
+[DEV][Fri Nov 01 2013 00:28:48]: Serving /js/lib/require.js
+[DEV][Fri Nov 01 2013 00:28:48]: Serving /js/lib/jsuri.js
+[DEV][Fri Nov 01 2013 00:28:48]: Serving /js/app.js
+[PROD][Fri Nov 01 2013 00:28:48]: Denied request for /favicon.ico
+[DEV][Fri Nov 01 2013 00:28:48]: Serving /js/app/main.js
+[DEV][Fri Nov 01 2013 00:28:48]: Serving /js/app/jammin.js
+[DEV][Fri Nov 01 2013 00:28:48]: Serving /js/lib/arrayinsert.js
+[DEV][Fri Nov 01 2013 00:28:48]: Serving /js/lib/jquery.js
+[DEV][Fri Nov 01 2013 00:28:48]: Serving /js/app/song.js
+[DEV][Fri Nov 01 2013 00:28:48]: Serving /js/app/playlist.js
+[DEV][Fri Nov 01 2013 00:28:48]: Serving /js/lib/jqueryui.js
+[DEV][Fri Nov 01 2013 00:28:48]: Serving /js/app/jamdisplay.js
+[PROD][Fri Nov 01 2013 00:45:38]: Started
+[DEV][Fri Nov 01 2013 00:45:41]: Serving /playlist.ejs
+[DEV][Fri Nov 01 2013 00:45:41]: Serving /style/jammin.css
+[DEV][Fri Nov 01 2013 00:45:41]: Serving /js/lib/jsuri.js
+[DEV][Fri Nov 01 2013 00:45:41]: Serving /js/lib/require.js
+[DEV][Fri Nov 01 2013 00:45:42]: Serving /js/app.js
+[DEV][Fri Nov 01 2013 00:45:42]: Serving /js/app/main.js
+[DEV][Fri Nov 01 2013 00:45:42]: Serving /js/app/jammin.js
+[DEV][Fri Nov 01 2013 00:45:42]: Serving /js/lib/jquery.js
+[DEV][Fri Nov 01 2013 00:45:42]: Serving /js/lib/arrayinsert.js
+[DEV][Fri Nov 01 2013 00:45:42]: Serving /js/app/song.js
+[DEV][Fri Nov 01 2013 00:45:42]: Serving /js/app/playlist.js
+[DEV][Fri Nov 01 2013 00:45:42]: Serving /js/lib/jqueryui.js
+[DEV][Fri Nov 01 2013 00:45:42]: Serving /js/app/jamdisplay.js
+[VERBOSE][Fri Nov 01 2013 00:45:46]: Attempting to find playlist with ID: test
+[PROD][Fri Nov 01 2013 00:46:59]: Started
+[VERBOSE][Fri Nov 01 2013 00:47:02]: Attempting to find playlist with ID: test
+[PROD][Fri Nov 01 2013 00:47:02]: Serving playlist test
+[DEV][Fri Nov 01 2013 00:47:02]: TypeError: Object <html>
+	<head>
+		<link rel="stylesheet" href="style/jammin.css" />
+		<script type="text/javascript" src="http://connect.soundcloud.com/sdk.js"></script>
+		<script type="text/javascript" src="https://w.soundcloud.com/player/api.js"></script>
+		<script type="text/javascript">
+			<%= (typeof init_playlist == 'undefined') ? '' : "var LINKTAPE_INIT_PLAYLIST = " + JSON.stringify(init_playlist) %>;
+		</script>
+		<script type="text/javascript" src="js/lib/jsuri.js"></script>
+		<script data-main="js/app" src="js/lib/require.js"></script>
+
+		<title><%= title %></title>
+	</head>
+	<body>
+		<div id='jamz'></div>
+	</body>
+</html> has no method 'substr'
+[PROD][Fri Nov 01 2013 00:48:19]: Started
+[VERBOSE][Fri Nov 01 2013 00:48:22]: Attempting to find playlist with ID: test
+[PROD][Fri Nov 01 2013 00:48:22]: Serving playlist test
+[PROD][Fri Nov 01 2013 00:48:43]: Started
+[PROD][Fri Nov 01 2013 00:49:25]: Started
+[PROD][Fri Nov 01 2013 00:50:04]: Started
+[VERBOSE][Fri Nov 01 2013 00:50:06]: Attempting to find playlist with ID: test
+[PROD][Fri Nov 01 2013 00:50:06]: Serving playlist test
+[DEV][Fri Nov 01 2013 00:50:06]: Serving /style/jammin.css
+[DEV][Fri Nov 01 2013 00:50:06]: Serving /js/lib/jsuri.js
+[DEV][Fri Nov 01 2013 00:50:06]: Serving /js/lib/require.js
+[DEV][Fri Nov 01 2013 00:50:06]: Serving /js/app.js
+[DEV][Fri Nov 01 2013 00:50:06]: Serving /js/app/main.js
+[DEV][Fri Nov 01 2013 00:50:06]: Serving /js/app/jammin.js
+[DEV][Fri Nov 01 2013 00:50:06]: Serving /js/lib/arrayinsert.js
+[DEV][Fri Nov 01 2013 00:50:06]: Serving /js/lib/jquery.js
+[DEV][Fri Nov 01 2013 00:50:06]: Serving /js/app/playlist.js
+[DEV][Fri Nov 01 2013 00:50:06]: Serving /js/app/song.js
+[DEV][Fri Nov 01 2013 00:50:06]: Serving /js/lib/jqueryui.js
+[DEV][Fri Nov 01 2013 00:50:06]: Serving /js/app/jamdisplay.js
+[PROD][Fri Nov 01 2013 00:50:41]: Started
+[VERBOSE][Fri Nov 01 2013 00:50:44]: Attempting to find playlist with ID: test
+[PROD][Fri Nov 01 2013 00:50:44]: Serving playlist test
+[DEV][Fri Nov 01 2013 00:50:44]: Serving /style/jammin.css
+[DEV][Fri Nov 01 2013 00:50:44]: Serving /js/lib/jsuri.js
+[DEV][Fri Nov 01 2013 00:50:44]: Serving /js/lib/require.js
+[DEV][Fri Nov 01 2013 00:50:44]: Serving /js/app.js
+[DEV][Fri Nov 01 2013 00:50:44]: Serving /js/app/main.js
+[DEV][Fri Nov 01 2013 00:50:44]: Serving /js/app/jammin.js
+[DEV][Fri Nov 01 2013 00:50:44]: Serving /js/lib/arrayinsert.js
+[DEV][Fri Nov 01 2013 00:50:44]: Serving /js/lib/jquery.js
+[DEV][Fri Nov 01 2013 00:50:44]: Serving /js/app/song.js
+[DEV][Fri Nov 01 2013 00:50:44]: Serving /js/app/playlist.js
+[DEV][Fri Nov 01 2013 00:50:45]: Serving /js/lib/jqueryui.js
+[DEV][Fri Nov 01 2013 00:50:45]: Serving /js/app/jamdisplay.js
+[PROD][Fri Nov 01 2013 00:54:35]: Started
+[VERBOSE][Fri Nov 01 2013 00:54:39]: Attempting to find playlist with ID: test
+[PROD][Fri Nov 01 2013 00:54:39]: Serving playlist test
+[DEV][Fri Nov 01 2013 00:54:39]: Serving /js/lib/jsuri.js
+[DEV][Fri Nov 01 2013 00:54:39]: Serving /style/jammin.css
+[DEV][Fri Nov 01 2013 00:54:39]: Serving /js/lib/require.js
+[DEV][Fri Nov 01 2013 00:54:40]: Serving /js/app.js
+[DEV][Fri Nov 01 2013 00:54:40]: Serving /js/app/main.js
+[DEV][Fri Nov 01 2013 00:54:40]: Serving /js/app/jammin.js
+[DEV][Fri Nov 01 2013 00:54:40]: Serving /js/lib/arrayinsert.js
+[DEV][Fri Nov 01 2013 00:54:40]: Serving /js/lib/jquery.js
+[DEV][Fri Nov 01 2013 00:54:40]: Serving /js/app/song.js
+[DEV][Fri Nov 01 2013 00:54:40]: Serving /js/app/playlist.js
+[DEV][Fri Nov 01 2013 00:54:40]: Serving /js/lib/jqueryui.js
+[DEV][Fri Nov 01 2013 00:54:40]: Serving /js/app/jamdisplay.js
+[PROD][Fri Nov 01 2013 00:55:20]: Started
+[VERBOSE][Fri Nov 01 2013 00:55:23]: Attempting to find playlist with ID: test
+[PROD][Fri Nov 01 2013 00:55:23]: Serving playlist test
+[DEV][Fri Nov 01 2013 00:55:23]: Serving /style/jammin.css
+[DEV][Fri Nov 01 2013 00:55:23]: Serving /js/lib/jsuri.js
+[DEV][Fri Nov 01 2013 00:55:23]: Serving /js/lib/require.js
+[DEV][Fri Nov 01 2013 00:55:23]: Serving /js/app.js
+[DEV][Fri Nov 01 2013 00:55:23]: Serving /js/app/main.js
+[DEV][Fri Nov 01 2013 00:55:23]: Serving /js/app/jammin.js
+[DEV][Fri Nov 01 2013 00:55:23]: Serving /js/lib/arrayinsert.js
+[DEV][Fri Nov 01 2013 00:55:23]: Serving /js/app/song.js
+[DEV][Fri Nov 01 2013 00:55:23]: Serving /js/app/playlist.js
+[DEV][Fri Nov 01 2013 00:55:23]: Serving /js/lib/jquery.js
+[DEV][Fri Nov 01 2013 00:55:23]: Serving /js/app/jamdisplay.js
+[DEV][Fri Nov 01 2013 00:55:23]: Serving /js/lib/jqueryui.js
+[PROD][Fri Nov 01 2013 00:56:49]: Started
+[VERBOSE][Fri Nov 01 2013 00:56:54]: Attempting to find playlist with ID: test
+[PROD][Fri Nov 01 2013 00:56:54]: Serving playlist test
+[DEV][Fri Nov 01 2013 00:56:54]: Serving /style/jammin.css
+[DEV][Fri Nov 01 2013 00:56:54]: Serving /js/lib/jsuri.js
+[DEV][Fri Nov 01 2013 00:56:54]: Serving /js/lib/require.js
+[DEV][Fri Nov 01 2013 00:56:54]: Serving /js/app.js
+[DEV][Fri Nov 01 2013 00:56:54]: Serving /js/app/main.js
+[DEV][Fri Nov 01 2013 00:56:54]: Serving /js/app/jammin.js
+[DEV][Fri Nov 01 2013 00:56:54]: Serving /js/lib/arrayinsert.js
+[DEV][Fri Nov 01 2013 00:56:54]: Serving /js/lib/jquery.js
+[DEV][Fri Nov 01 2013 00:56:54]: Serving /js/app/song.js
+[DEV][Fri Nov 01 2013 00:56:54]: Serving /js/app/playlist.js
+[DEV][Fri Nov 01 2013 00:56:54]: Serving /js/lib/jqueryui.js
+[DEV][Fri Nov 01 2013 00:56:54]: Serving /js/app/jamdisplay.js
+[PROD][Fri Nov 01 2013 00:57:14]: Started
+[VERBOSE][Fri Nov 01 2013 00:57:16]: Attempting to find playlist with ID: test
+[PROD][Fri Nov 01 2013 00:57:16]: Serving playlist test
+[DEV][Fri Nov 01 2013 00:57:16]: Serving /style/jammin.css
+[DEV][Fri Nov 01 2013 00:57:16]: Serving /js/lib/jsuri.js
+[DEV][Fri Nov 01 2013 00:57:16]: Serving /js/lib/require.js
+[DEV][Fri Nov 01 2013 00:57:17]: Serving /js/app.js
+[DEV][Fri Nov 01 2013 00:57:17]: Serving /js/app/main.js
+[DEV][Fri Nov 01 2013 00:57:17]: Serving /js/app/jammin.js
+[DEV][Fri Nov 01 2013 00:57:17]: Serving /js/lib/arrayinsert.js
+[DEV][Fri Nov 01 2013 00:57:17]: Serving /js/lib/jquery.js
+[DEV][Fri Nov 01 2013 00:57:17]: Serving /js/app/song.js
+[DEV][Fri Nov 01 2013 00:57:17]: Serving /js/app/playlist.js
+[DEV][Fri Nov 01 2013 00:57:17]: Serving /js/lib/jqueryui.js
+[DEV][Fri Nov 01 2013 00:57:17]: Serving /js/app/jamdisplay.js
+[PROD][Fri Nov 01 2013 00:57:31]: Started
+[VERBOSE][Fri Nov 01 2013 00:57:33]: Attempting to find playlist with ID: test
+[PROD][Fri Nov 01 2013 00:57:33]: Serving playlist test
+[DEV][Fri Nov 01 2013 00:57:33]: Serving /style/jammin.css
+[DEV][Fri Nov 01 2013 00:57:33]: Serving /js/lib/jsuri.js
+[DEV][Fri Nov 01 2013 00:57:33]: Serving /js/lib/require.js
+[DEV][Fri Nov 01 2013 00:57:33]: Serving /js/app.js
+[DEV][Fri Nov 01 2013 00:57:33]: Serving /js/app/main.js
+[DEV][Fri Nov 01 2013 00:57:33]: Serving /js/app/jammin.js
+[DEV][Fri Nov 01 2013 00:57:33]: Serving /js/lib/arrayinsert.js
+[DEV][Fri Nov 01 2013 00:57:33]: Serving /js/lib/jquery.js
+[DEV][Fri Nov 01 2013 00:57:33]: Serving /js/app/song.js
+[DEV][Fri Nov 01 2013 00:57:33]: Serving /js/app/playlist.js
+[DEV][Fri Nov 01 2013 00:57:33]: Serving /js/lib/jqueryui.js
+[DEV][Fri Nov 01 2013 00:57:33]: Serving /js/app/jamdisplay.js

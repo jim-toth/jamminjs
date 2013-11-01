@@ -1,8 +1,6 @@
 define(["app/song", "app/playlist"], function(Song, Playlist) {
 	var SC_API_KEY = '8320c8fe21f98b89ad50068014b92068';
 
-	var server = 'http://linkta.pe:8080';
-
 	var Jammin = function (div, init_playlist) {
 		this.container = div;
 		this.init_playlist = init_playlist;
@@ -33,7 +31,7 @@ define(["app/song", "app/playlist"], function(Song, Playlist) {
 		
 		// jammin logo
 		var jammin_logo = $('<div>').addClass('jammin-logo');
-		var jammin_logo_text = $('<div>').addClass('jammin-window-text').text('JamminJS');
+		var jammin_logo_text = $('<div>').addClass('jammin-window-text').text('LINKTA.PE');
 		jammin_logo.append(jammin_logo_text);
 		this.jammin_logo = jammin_logo;
 		container.append(this.jammin_logo);
