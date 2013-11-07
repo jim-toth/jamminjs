@@ -147,7 +147,9 @@ define(["app/song", "app/jamdisplay"], function(Song, JamDisplay) {
 								this.stopCurrentTrack();
 								this['currentTrack'] = song;
 							}
-							this.jamDisplay.setBgImage(track.artwork_url);
+							if(track.artwork_url != null) {
+								this.jamDisplay.setBgImage(track.artwork_url);
+							}
 							this.jamDisplay.show();
 							$('#play-control', this.song_controls).text('||');
 						}
