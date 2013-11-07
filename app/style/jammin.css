@@ -136,6 +136,12 @@ body {
 	bottom:0px;
 }
 
+.pl-controls-wrap {
+	width:100%;
+	position:fixed;
+	top:0px;
+}
+
 .controls {
 	margin:0 auto;
 	width:358px;
@@ -143,6 +149,16 @@ body {
 	line-height:35px;
 	background-color:#FFFFFF;
 	border:1px solid black;
+}
+
+.pl-controls {
+	margin:0 auto;
+	width:52;
+	line-height:35px;
+	background-color:#FFFFFF;
+	border:0px;
+	border-style: solid;
+	border-color: #000000;
 }
 
 .control-button {

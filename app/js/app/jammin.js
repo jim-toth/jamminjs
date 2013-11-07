@@ -7,6 +7,7 @@ define(["app/song", "app/playlist"], function(Song, Playlist) {
 		this.container = div;
 		this.init_playlist = init_playlist;
 		this.initAPIs();
+		this.plStates = new Array();
 	}
 
 	Jammin.prototype.initAPIs = function() {
@@ -67,7 +68,7 @@ define(["app/song", "app/playlist"], function(Song, Playlist) {
 		this.add_song_pane = add_song_pane;
 		container.append(this.add_song_pane);
 
-		// build controls
+		// build song controls
 		var song_controls_wrap = $('<span>').addClass('controls-wrap');
 		var song_controls = $('<div>').attr('id', 'controls').addClass('controls');
 		var prev_control = $('<a>').attr('id', 'prev-control').addClass('control-button').text('<<');
@@ -80,6 +81,17 @@ define(["app/song", "app/playlist"], function(Song, Playlist) {
 		song_controls.append(prev_control,play_control,next_control,prog_control);
 		this.song_controls = song_controls;
 		container.append(song_controls_wrap);
+
+		// build playlist controls
+		var pl_controls_wrap = $('<span>').addClass('pl-controls-wrap');
+		var pl_controls = $('<div>').attr('id', 'pl-controls').addClass('pl-controls');
+		var save_control = $('<a>').attr('id', 'save-control').addClass('control-button').text('Save');
+		pl_controls_wrap.append(pl_controls);
+		pl_controls.append(save_control);
+		container.append(pl_controls_wrap);
+
+		// bind playlist controls
+		save_control.click($.proxy(function () {this.savePlaylist()}, this));
 
 		// Create Playlist
 		this.playlist = new Playlist(jammin_playlist, this.song_controls, jammin_window);
@@ -226,17 +238,21 @@ define(["app/song", "app/playlist"], function(Song, Playlist) {
 			url: '/p',
 			dataType: 'json',
 			data: JSON.stringify(this.playlist.toPlainObject()),
-			success: function(data, textStatus, jqXHR) {
-				console.log(data);
-				console.log(textStatus);
-				console.log(jqXHR);
-			},
+			success: $.proxy(function(data, textStatus, jqXHR) {
+				this.updateLocation('/' + data.pid);
+				console.log('Save successful: ' + data.pid);
+			}, this),
 			error: function(jqXHR, textStatus, errorThrown) {
 				console.log(jqXHR);
 				console.log(textStatus);
 				console.log(errorThrown);
 			}
 		});
+		this.init_playlist = this.playlist.toPlainObject();
+	}
+
+	Jammin.prototype.updateLocation = function(new_path) {
+		window.history.pushState($(document).contents()[0], document.title, new_path);
 	}
 
 	return Jammin;
