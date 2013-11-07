@@ -252,7 +252,7 @@ define(["app/song", "app/playlist"], function(Song, Playlist) {
 	}
 
 	Jammin.prototype.updateLocation = function(new_path) {
-		window.history.pushState({}, document.title, new_path);
+		window.history.pushState('', document.title, new_path);
 	}
 
 	return Jammin;
