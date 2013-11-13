@@ -39,27 +39,24 @@ define(["app/song", "app/jamdisplay"], function(Song, JamDisplay) {
 		$('#prog-control', song_controls).bind('click', $.proxy(this.setProg, this));
 	}
 
-	Playlist.prototype.addSong = function(song, idx) {
+	Playlist.prototype.addSong = function(song, idx) {		
 		var newIdx;
-		if(typeof idx != 'undefined') {
-			newIdx = idx;
-		} else {
-			newIdx = idx;
-		}
-		
+
 		if(typeof idx != 'undefined') {
 			this.songs.insert(idx, song);
+			newIdx = idx;
 		} else {
 			this.songs.push(song);
+			newIdx = this.songs.length - 1;
 		}
 
 		song.container = this.buildSongContainer(newIdx, song.song_type);
 		this.container.append(song.container);
 
 		if(song.song_type == 'sc') {
-			this.buildSoundCloud(song);//, $.proxy(this.refreshPlaylist, this));
+			this.buildSoundCloud(song);
 		} else if(song.song_type == 'yt') {
-			this.buildYouTube(song);//, $.proxy(this.refreshPlaylist, this));
+			this.buildYouTube(song);
 		}
 
 		// set recently added track as current song if there isnt already one
@@ -122,7 +119,7 @@ define(["app/song", "app/jamdisplay"], function(Song, JamDisplay) {
 		return sWrap;
 	}
 
-	Playlist.prototype.buildSoundCloud = function(song, callback) {
+	Playlist.prototype.buildSoundCloud = function(song) {
 		if(typeof song.track_id != 'undefined') {
 			// SC.oEmbed('http://api.soundcloud.com/tracks/'+song.track_id, SCopts, function(oEmbed) {
 			// 	$('.control', song.container).append(oEmbed);
@@ -166,10 +163,6 @@ define(["app/song", "app/jamdisplay"], function(Song, JamDisplay) {
 					song.player.bind(SC.Widget.Events.PLAY_PROGRESS, $.proxy(function(audio) {
 						this.updateProg(Math.floor(audio.relativePosition * 100));
 					}, this));
-
-					if($(this.container).children().length == this.loaded_length) {
-						callback();
-					}
 				},this));
 			},this));
 		}
@@ -212,15 +205,12 @@ define(["app/song", "app/jamdisplay"], function(Song, JamDisplay) {
 		}
 	}
 
-	Playlist.prototype.buildYouTube = function(song, callback) {
+	Playlist.prototype.buildYouTube = function(song) {
 		var theseOpts = $.extend(true, { 'videoId': song.video_id }, this.YTopts);
 		var target = $('.yt-target', song.container).first().attr('id');
 		var player = new YT.Player(target, theseOpts);
 		song["player"] = player;
 		$(player.a).removeClass('yt-target');
-		if($(this.container).children().length == this.loaded_length) {
-			callback();
-		}
 	}
 
 	Playlist.prototype.getIndexOfTrack = function(song) {
