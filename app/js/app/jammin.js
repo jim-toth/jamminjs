@@ -147,6 +147,8 @@ define(["app/song", "app/playlist"], function(Song, Playlist) {
 			this.unshortenURI(uri, function(unshort_uri) {
 				callback({ 'song_type': 'sc', 'uri': (new Uri(unshort_uri)) });
 			});
+		} else if(uri.host() == 'google.com' || uri.host() == 'www.google.com') {
+			this.resolveURI(decodeURIComponent(uri.getQueryParamValue('url')), callback);
 		} else {
 			console.error('Unrecognized link: ' + uri.toString());
 		}
