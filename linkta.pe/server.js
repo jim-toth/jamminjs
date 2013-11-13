@@ -207,6 +207,32 @@ function mongoGetPlaylist(playlist_id, callback) {
 	});
 }
 
+function mongoVerifyPlaylist(playlist_id, response, playlistToSave, callback) {
+	//Connect to the database
+	MongoClient.connect(format("mongodb://%s:%s/linktape", mongohost, mongoport), function(err, db) {
+		if (err) {
+			//Error occurred during connection, kick it back
+			ltLog.error('Could not connect to MongoDB in mongoVerifyPlaylist');
+			callback(err);
+		} else {
+			//Connected to database, get the playlist
+			ltLog.verbose("Attempting to find playlist with ID: " + playlist_id);
+			db.collection('playlists').findOne({
+				"pid": playlist_id
+			}, function(err, checkPlaylist) {
+				if (err) {
+					//Error occured during query
+					ltLog.error('Error during mongoVerifyPlaylist query' + err);
+					callback(err, response);
+				} else {
+					//No error, but no guarantees the playlist exists
+					callback(err, response, playlistToSave, checkPlaylist);
+				}
+			});
+		}
+	});
+}
+
 /**
  * Handles /p/laylist GET requests through mongoGetPlaylist
  *
@@ -241,6 +267,7 @@ function getPlaylist(request, response) {
 						"Content-Type": "application/json"
 					});
 					playlist._id = undefined;
+					playlist.passphrase = undefined;
 					response.write(JSON.stringify(playlist));
 					response.end();
 				} else {
@@ -271,107 +298,266 @@ function getPlaylist(request, response) {
  * Sends 200 OK when saved successfully.
  */
 
-function savePlaylist(request, response) {
-	var newPID = genSlug();
+function saveNewPlaylist(err, response, playlistToSave, checkPlaylist) {
 
-	//Connect to the database, verify the slug has not collided	
-	MongoClient.connect(format("mongodb://%s:%s/linktape", mongohost, mongoport), function(err, db) {
-		if (err) {
-			// Error while attempting to connect to Mongo
-			response.writeHead(500, {
-				"Content-Type": "text/plain"
-			});
-			response.write("An error has occurred.");
-			response.end();
-
-			ltLog.error('Could not connect to Mongo DB!');
+	if (err || typeof playlistToSave == 'undefined') {
+		// Error while attempting to connect to or query Mongo
+		response.writeHead(500, {
+			"Content-Type": "text/plain"
+		});
+		response.write("An error has occurred.");
+		response.end();
+	} else {
+		// No errors connecting to mongo, but playlist_id may have collided
+		if (checkPlaylist != null) {
+			// Found a playlist. Slug has collided. Recurse.
+			ltLog.dev("Collision detected in saveNewPlaylist. Recursing.");
+			playlistToSave.pid = genSlug();
+			mongoVerifyPlaylist(playlistToSave.pid, response, playlistToSave, saveNewPlaylist);
 		} else {
-			// Connection successful, check for collision
-			db.collection('playlists').count({
-				"pid": newPID
-			}, function(err, count) {
+			// Could not find playlist. Slug is free. Insert playlist into DB
+			// Connect to the database
+			MongoClient.connect(format("mongodb://%s:%s/linktape", mongohost, mongoport), function(err, db) {
 				if (err) {
-					// Error while attempting to access database
+					// Error while attempting to connect to Mongo
 					response.writeHead(500, {
 						"Content-Type": "text/plain"
 					});
 					response.write("An error has occurred.");
 					response.end();
+
+					ltLog.error('Could not connect to Mongo DB!' + err);
 				} else {
-					//Got a count of the number of collisions, if it's zero, proceed
-					if (count == 0) {
-						//Build and save the playlist
-						if (request.headers["content-length"] > 0) {
-							// Request data is sent in chunks if it is too big.
-							// Data must be handled through events.
-							var data = '';
-
-							// Received a chunk, concatenate.
-							request.on('data', function(chunk) {
-								data += chunk;
-							});
-
-							// Done receiving data, attempt to save playlist
-							request.on('end', function() {
-								var json = JSON.parse(data);
-								ltLog.dev(json);
-								var pl = new Object();
-								pl.pid = newPID;
-								pl.name = json.name || 'Untitled Playlist';
-								pl.playlist = new Array();
-
-								for (var i = 0; i < json.playlist.length; i++) {
-									pl.playlist[i] = new Object();
-									pl.playlist[i].title = json.playlist[i].title;
-									pl.playlist[i].artist = json.playlist[i].artist;
-									pl.playlist[i].uri = json.playlist[i].uri;
-									pl.playlist[i].song_type = json.playlist[i].song_type;
-									pl.playlist[i].video_id = json.playlist[i].video_id;
-								}
-
-								ltLog.dev("Saving playlist " + pl.pid);
-
-								//Insert the playlist				
-								db.collection('playlists').insert(pl, function(err, what) {
-									if (err) {
-										// Error while attempting to connect to Mongo
-										response.writeHead(500, {
-											"Content-Type": "text/plain"
-										});
-										response.write("An error has occurred.");
-										response.end();
-
-										ltLog.error('Could not connect to Mongo DB!');
-									} else {
-										response.writeHead(200, {
-											"Content-Type": "application/json"
-										});
-										response.write(JSON.stringify({
-											"pid": pl.pid
-										}));
-										response.end();
-									}
-								});
-							});
-						} else {
-							// No data sent, yell at them
-							response.writeHead(400, {
+					//Connected to database. Attempt to insert playlist
+					ltLog.dev("Saving playlist " + playlistToSave.pid);
+	
+					//Insert the playlist				
+					db.collection('playlists').insert(playlistToSave, function(err, what) {
+						if (err) {
+							// Error while attempting to connect to Mongo
+							response.writeHead(500, {
 								"Content-Type": "text/plain"
+								});
+							response.write("An error has occurred.");
+							response.end();
+				
+							ltLog.error('Could not insert new playlist ' + err);
+						} else {
+							//playlist has been inserted, send back pid
+							response.writeHead(200, {
+								"Content-Type": "application/json"
 							});
-							response.write('400 Bad Request: No data sent.');
+							response.write(JSON.stringify({
+								"pid": playlistToSave.pid
+							}));
 							response.end();
 						}
-					} else {
-						//Count is not zero, collision detected
-						//Recurse the function and try again
-						ltLog.dev("Collision Detected");
-						savePlaylist(request, response);
-					}
+					});
 				}
 			});
 		}
-	});
+	}
 }
+
+function updatePlaylist(err, response, playlistToSave, checkPlaylist) {
+
+	if (err) {
+		// Error while attempting to connect to or query Mongo
+		response.writeHead(500, {
+			"Content-Type": "text/plain"
+		});
+		response.write("An error has occurred.");
+		response.end();
+	} else {
+		// No errors connecting to mongo, but playlist may not exist
+		if (checkPlaylist) {
+			ltLog.verbose(JSON.stringify(checkPlaylist));
+			ltLog.verbose(JSON.stringify(playlistToSave));
+			// Found a playlist. Check that the passphrase is correct
+			if(checkPlaylist.passphrase == playlistToSave.passphrase) {
+				// Connect to the database and update
+				MongoClient.connect(format("mongodb://%s:%s/linktape", mongohost, mongoport), function(err, db) {
+					if (err) {
+						// Error while attempting to connect to Mongo
+						response.writeHead(500, {
+							"Content-Type": "text/plain"
+						});
+						response.write("An error has occurred.");
+						response.end();
+
+						ltLog.error('Could not connect to Mongo DB!' + err);
+					} else {
+						//Connected to database. Attempt to insert playlist
+						ltLog.dev("Updating playlist " + checkPlaylist.pid);
+	
+						//Update the playlist				
+						db.collection('playlists').update({ pid:checkPlaylist.pid }, {$set:{playlist:playlistToSave.playlist}}, function(err, what) {
+							if (err) {
+								// Error while attempting to connect to Mongo
+								response.writeHead(500, {
+									"Content-Type": "text/plain"
+									});
+								response.write("An error has occurred.");
+								response.end();
+				
+								ltLog.error('Could not update playlist '+ playlistToSave.pid + ' '+ err);
+							} else {
+								//playlist has been updated, send back pid
+								response.writeHead(200, {
+									"Content-Type": "application/json"
+								});
+								response.write(JSON.stringify({
+									"pid": playlistToSave.pid
+								}));
+								response.end();
+							}
+						});
+					}
+				});
+			} else {
+				//Wrong passphrase
+				response.writeHead(403, {
+					"Content-Type": "text/plain"
+				});
+				response.write("Invalid passphrase supplied.");
+				response.end();
+			}
+		}	else {
+			//No playlist found. Bad update request. This should never execute.
+			response.writeHead(500, {
+				"Content-Type": "text/plain"
+			});
+			response.write("Internal Server Error");
+			response.end();
+			ltLog.error("New playlist routed to update function.");
+		}
+	}
+}
+
+/**
+ * Routes saving a playlist to the proper function based on whether it's an update or not
+ */
+
+function savePlaylist(request, response) {
+	
+	if (request.headers["content-length"] > 0) {
+		// Request data is sent in chunks if it is too big.
+		// Data must be handled through events.
+		var data = '';
+
+		// Received a chunk, concatenate.
+		request.on('data', function(chunk) {
+			data += chunk;
+			});
+
+		// Done receiving data, construct playlist object
+		request.on('end', function() {
+			
+			var json = JSON.parse(data);
+			ltLog.dev(json);
+			
+			var pl = new Object();
+			pl.pid = json.pid || null;
+			pl.name = json.name || 'Untitled Playlist';
+			pl.passphrase = json.passphrase || null;
+			pl.playlist = new Array();
+
+			for (var i = 0; i < json.playlist.length; i++) {
+				pl.playlist[i] = new Object();
+				pl.playlist[i].title = json.playlist[i].title;
+				pl.playlist[i].artist = json.playlist[i].artist;
+				pl.playlist[i].uri = json.playlist[i].uri;
+				pl.playlist[i].song_type = json.playlist[i].song_type;
+				pl.playlist[i].video_id = json.playlist[i].video_id;
+			}
+
+			//Route request to appropriate function
+			if(pl.pid == null) {
+				//No playlist id sent, save as new playlist
+				ltLog.dev("Saving new playlist");
+				pl.pid = genSlug();
+				mongoVerifyPlaylist(pl.pid, response, pl, saveNewPlaylist);
+			} else {
+				//Playlist id sent, update playlist
+				ltLog.dev("Updating playlist" + pl.pid);
+				mongoVerifyPlaylist(pl.pid, response, pl, updatePlaylist);
+			}
+		});	
+	} else {
+		// No data sent, yell at them
+		response.writeHead(400, {"Content-Type": "text/plain"});
+		response.write('400 Bad Request: No data sent.');
+		response.end();
+	}
+}
+
+function clonePlaylist(request, response) {
+	var pathname = url.parse(request.url).pathname;
+	var pathpcs = pathname.split('/');
+
+	// Get playlist ID
+	var pid;
+	if (pathpcs.length > 2 && pathpcs[2] != '') {
+		pid = pathpcs[2];
+	}
+
+	if (typeof pid != 'undefined') {
+		mongoGetPlaylist(pid, function(err, playlist) {
+			if (err) {
+				// Error while attempting to connect to or query Mongo
+				response.writeHead(500, {
+					"Content-Type": "text/plain"
+				});
+				response.write("An error has occurred.");
+				response.end();
+			} else {
+				// No errors connecting to mongo, but playlist may not exist
+				if (playlist != null) {
+					// Found playlist. Save it as a new playlist
+					playlist._id = undefined;
+					playlist.passphrase = undefined;
+					//first, see if they have supplied a new passphrase
+					if (request.headers["content-length"] > 0) {
+						// Request data is sent in chunks if it is too big.
+						// Data must be handled through events.
+						var data = '';
+
+						// Received a chunk, concatenate.
+						request.on('data', function(chunk) {
+						data += chunk;
+						});
+
+						// Done receiving data, get passphrase
+						request.on('end', function() {
+							var json = JSON.parse(data);
+							ltLog.dev(json);
+							if(typeof json.passphrase != 'undefined') {
+								//They have. Use it
+								playlist.passphrase = json.passphrase;
+							}
+						});
+					}
+					mongoVerifyPlaylist(pid, response, playlist, saveNewPlaylist);
+				} else {
+					// Could not find playlist.
+					response.writeHead(404, {
+						"Content-Type": "text/plain"
+					});
+					response.write("Could not find playlist.");
+					response.end();
+				}
+			}
+		});
+	} else {
+		// Invalid or no playlist ID, send 400 bad request
+		response.writeHead(400, {
+			"Content-Type": "text/plain"
+		});
+		response.write("Invalid playlist request.");
+		response.end();
+	}
+}
+
 
 /**
  * Routes /p/laylist requests.
@@ -381,7 +567,16 @@ function routePlaylist(request, response) {
 	if (request.method == 'GET') {
 		getPlaylist(request, response);
 	} else if (request.method == 'POST') {
-		savePlaylist(request, response);
+		
+		var pathname = url.parse(request.url).pathname;
+		var pathpcs = pathname.split('/');
+
+		if (pathpcs.length > 2 && pathpcs[2] != '') {
+			clonePlaylist(request, response);
+		} else {
+			savePlaylist(request, response);
+		}
+
 	} else {
 		// Invalid request
 		response.writeHead(400, {
