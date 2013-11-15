@@ -154,6 +154,7 @@ function route(request, response) {
 							response.writeHead(200, {
 								"Content-Type": extToContentType('.ejs')
 							});
+							playlist["passphrase"] = undefined;
 							try {
 								response.end(ejs.render(file, {
 									"title": "LINKTA.PE - " + (playlist.name || 'Untitled Playlist'),
@@ -315,7 +316,7 @@ function saveNewPlaylist(err, response, playlistToSave, checkPlaylist) {
 			playlistToSave.pid = genSlug();
 			mongoVerifyPlaylist(playlistToSave.pid, response, playlistToSave, saveNewPlaylist);
 		} else {
-			// Could not find playlist. Slug is free. Insert playlist into DB
+			// Could not find playlist. Slug is free. Insert playlist into DB. Bustha Rhymes.
 			// Connect to the database
 			MongoClient.connect(format("mongodb://%s:%s/linktape", mongohost, mongoport), function(err, db) {
 				if (err) {

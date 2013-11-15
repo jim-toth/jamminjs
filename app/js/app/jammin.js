@@ -78,7 +78,7 @@ define(["app/song", "app/playlist"], function(Song, Playlist) {
 		var prog_display = $('<div>').progressbar({ value: 1, max: 100 }).attr('id', 'prog-display').addClass('control-prog');
 		prog_control.append(prog_display);
 		song_controls_wrap.append(song_controls);
-		song_controls.append(prev_control,play_control,next_control,prog_control);
+		song_controls.append(prev_control, play_control, next_control, prog_control);
 		this.song_controls = song_controls;
 		container.append(song_controls_wrap);
 
@@ -86,12 +86,25 @@ define(["app/song", "app/playlist"], function(Song, Playlist) {
 		var pl_controls_wrap = $('<span>').addClass('pl-controls-wrap');
 		var pl_controls = $('<div>').attr('id', 'pl-controls').addClass('pl-controls');
 		var save_control = $('<a>').attr('id', 'save-control').addClass('control-button').text('Save');
+		var clone_control = $('<a>').attr('id', 'clone-control').addClass('control-button').text('Clone');
+		var pass_control = $('<input>').attr('id', 'pass-control').addClass('control-input').attr('placeholder', 'Passphrase');
+		var title_control = $('<input>').attr('id', 'title-control').addClass('control-input').attr('placeholder', 'Title');
+
+		if(typeof this.init_playlist != 'undefined' && typeof this.init_playlist.name != 'undefined') {
+			title_control.val(this.init_playlist.name);
+		}
+
 		pl_controls_wrap.append(pl_controls);
-		pl_controls.append(save_control);
+		pl_controls.append(title_control, save_control, clone_control, pass_control);
 		container.append(pl_controls_wrap);
 
 		// bind playlist controls
-		save_control.click($.proxy(function () {this.savePlaylist()}, this));
+		save_control.click($.proxy(function () {
+			this.savePlaylist(title_control.val(), pass_control.val());
+		}, this));
+		clone_control.click($.proxy(function () {
+			this.clonePlaylist(title_control.val(), pass_control.val());
+		}, this));
 
 		// Create Playlist
 		this.playlist = new Playlist(jammin_playlist, this.song_controls, jammin_window);
@@ -234,12 +247,22 @@ define(["app/song", "app/playlist"], function(Song, Playlist) {
 		// }, this));
 	}
 
-	Jammin.prototype.savePlaylist = function() {
+	Jammin.prototype.savePlaylist = function(title, passhrase) {
+		var json_plist = this.playlist.toPlainObject();
+
+		if(typeof title != 'undefined') {
+			json_plist["name"] = title;
+		}
+
+		if(typeof passphrase != 'undefined') {
+			json_plist["passphrase"] = passphrase;
+		}
+
 		$.ajax({
 			type: 'POST',
 			url: '/p',
 			dataType: 'json',
-			data: JSON.stringify(this.playlist.toPlainObject()),
+			data: JSON.stringify(json_plist),
 			success: $.proxy(function(data, textStatus, jqXHR) {
 				this.updateLocation('/' + data.pid);
 				console.log('Save successful: ' + data.pid);
@@ -251,6 +274,34 @@ define(["app/song", "app/playlist"], function(Song, Playlist) {
 			}
 		});
 		this.init_playlist = this.playlist.toPlainObject();
+	}
+
+	Jammin.prototype.clonePlaylist = function(title, passphrase) {
+		var json_plist = this.playlist.toPlainObject();
+
+		if(typeof title != 'undefined') {
+			json_plist["name"] = title;
+		}
+
+		if(typeof passphrase != 'undefined') {
+			json_plist["passphrase"] = passphrase;
+		}
+
+		$.ajax({
+			type: 'POST',
+			url: '/p' + location.pathname,
+			dataType: 'json',
+			data: JSON.stringify(json_plist),
+			success: $.proxy(function(data, textStatus, jqXHR) {
+				this.updateLocation('/' + data.pid);
+				console.log('Clone successful: ' + data.pid);
+			}, this),
+			error: function(jqXHR, textStatus, errorThrown) {
+				console.log(jqXHR);
+				console.log(textStatus);
+				console.log(errorThrown);
+			}
+		});
 	}
 
 	Jammin.prototype.updateLocation = function(new_path) {

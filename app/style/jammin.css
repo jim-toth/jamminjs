@@ -153,8 +153,9 @@ body {
 
 .pl-controls {
 	margin:0 auto;
-	width:52;
+	width:308px;
 	line-height:35px;
+	height:35px;
 	background-color:#FFFFFF;
 	border:0px;
 	border-style: solid;
@@ -171,6 +172,13 @@ body {
 	text-align: center;
 	font-weight:900;
 	vertical-align: top;
+}
+
+.control-input {
+	width: 100px;
+	font-size: 18px;
+	border: 1px solid black;
+	vertical-align: middle;
 }
 
 .control-prog {
