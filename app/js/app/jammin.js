@@ -219,34 +219,6 @@ define(["app/song", "app/playlist"], function(Song, Playlist) {
 		}, this));
 	}
 
-	Jammin.prototype.loadPlaylistByID = function(playlist_id) {
-		// TODO: clear current playlist, fix url, config file.
-		// $.getJSON(playlist_uri, $.proxy(function(json) {
-		// 	var resolves = new Array();
-			
-		// 	$.each(json.playlist, $.proxy(function(idx, song) {
-		// 		if(song.song_type == 'sc') {
-		// 			song.uri = new Uri(song.uri);
-		// 			if(song.uri.host() == 'hypem.com' && song.uri.path().split("/")[1] == 'track') {
-		// 				song.uri = 'http://hypem.com/go/sc/'+song.uri.path().split("/")[2];
-		// 			}
-		// 			resolves.push(
-		// 				this.unshortenURI(song.uri, $.proxy(function(ruri) {
-		// 					song.uri = ruri;
-		// 				}, this))
-		// 			);
-		// 		}
-		// 	}, this));
-
-		// 	$.when.apply($, resolves).done($.proxy(function() {
-		// 		$.each(json.playlist, $.proxy(function(idx, song) {
-		// 			song.uri = new Uri(song.uri);
-		// 		}, this));
-		// 		this.playlist.addSongs(json);
-		// 	}, this));			
-		// }, this));
-	}
-
 	Jammin.prototype.savePlaylist = function(title, passhrase) {
 		var json_plist = this.playlist.toPlainObject();
 
@@ -305,7 +277,9 @@ define(["app/song", "app/playlist"], function(Song, Playlist) {
 	}
 
 	Jammin.prototype.updateLocation = function(new_path) {
-		window.history.pushState('', document.title, new_path);
+		window.history.pushState('',
+			document.title,
+			new_path);
 	}
 
 	return Jammin;

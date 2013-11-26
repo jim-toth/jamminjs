@@ -39,7 +39,7 @@ define(["app/song", "app/jamdisplay"], function(Song, JamDisplay) {
 		$('#prog-control', song_controls).bind('click', $.proxy(this.setProg, this));
 	}
 
-	Playlist.prototype.addSong = function(song, idx) {		
+	Playlist.prototype.addSong = function (song, idx) {
 		var newIdx;
 
 		if(typeof idx != 'undefined') {
@@ -85,7 +85,34 @@ define(["app/song", "app/jamdisplay"], function(Song, JamDisplay) {
 		}
 	}
 
-	Playlist.prototype.buildSongContainer = function(newIdx, type) {
+	Playlist.prototype.removeSong = function (idx) {
+		
+		// if removing current track, stop it and set new current track
+		if(this.getIndexOfTrack(this.currentTrack) == idx) {
+			this.currentTrack.stop();
+			
+			if(typeof this.songs[idx+1] != 'undefined') {
+				this.currentTrack = this.songs[idx+1];
+			} else if(typeof this.songs[idx-1] == 'undefined') {
+				this.currentTrack = this.songs[idx-1];
+			} else {
+				this.currentTrack = undefined;
+			}
+			$('#play-control', this.song_controls).text('>');
+		}
+
+		// remove song from DOM
+		this.destroySongContainer(idx);
+
+		// remove song from list
+		this.songs.splice(idx, 1);
+	}
+
+	Playlist.prototype.destroySongContainer = function (idx) {
+		$(this.container).find('.song-wrapper:nth-child(' + (idx + 1) + ')').remove();
+	}
+
+	Playlist.prototype.buildSongContainer = function (newIdx, type) {
 		var builtSong;
 
 		if(type == 'sc') {
@@ -111,15 +138,21 @@ define(["app/song", "app/jamdisplay"], function(Song, JamDisplay) {
 
 		var sWrap = $('<span>');
 		sWrap.attr('id', 'song-'+newIdx);
-		sWrap.attr('playlistIdx', newIdx);
 		sWrap.addClass('song-wrapper');
 
-		sWrap.append(builtSong);
+		var song_container_controls = $('<div>').addClass('song-container-controls');
+		var remove_song_control = $('<a>').addClass('control-button').addClass('remove-song-control').text('X');
+		remove_song_control.click($.proxy(function (event) {
+			this.removeSong($(event.target).closest('.song-wrapper').index());
+		}, this));
+
+		song_container_controls.append(builtSong,remove_song_control);
+		sWrap.append(song_container_controls);
 
 		return sWrap;
 	}
 
-	Playlist.prototype.buildSoundCloud = function(song) {
+	Playlist.prototype.buildSoundCloud = function (song) {
 		if(typeof song.track_id != 'undefined') {
 			// SC.oEmbed('http://api.soundcloud.com/tracks/'+song.track_id, SCopts, function(oEmbed) {
 			// 	$('.control', song.container).append(oEmbed);
@@ -168,8 +201,8 @@ define(["app/song", "app/jamdisplay"], function(Song, JamDisplay) {
 		}
 	}
 
-	Playlist.prototype.handleYouTubeState = function(event) {
-		var thisIdx = $($(event.target.a).closest('.song-wrapper')[0]).attr('playlistIdx');
+	Playlist.prototype.handleYouTubeState = function (event) {
+		var thisIdx = $(event.target.a).closest('.song-wrapper').index();
 		var isCurrentSong = false;
 		if(this.getIndexOfTrack(this.currentTrack) == thisIdx) {
 			isCurrentSong = true;
@@ -205,7 +238,7 @@ define(["app/song", "app/jamdisplay"], function(Song, JamDisplay) {
 		}
 	}
 
-	Playlist.prototype.buildYouTube = function(song) {
+	Playlist.prototype.buildYouTube = function (song) {
 		var theseOpts = $.extend(true, { 'videoId': song.video_id }, this.YTopts);
 		var target = $('.yt-target', song.container).first().attr('id');
 		var player = new YT.Player(target, theseOpts);
@@ -213,7 +246,7 @@ define(["app/song", "app/jamdisplay"], function(Song, JamDisplay) {
 		$(player.a).removeClass('yt-target');
 	}
 
-	Playlist.prototype.getIndexOfTrack = function(song) {
+	Playlist.prototype.getIndexOfTrack = function (song) {
 		var idx = -1;
 
 		for(var i=0; i < this.songs.length; i++) {
@@ -226,7 +259,7 @@ define(["app/song", "app/jamdisplay"], function(Song, JamDisplay) {
 		return idx;
 	}
 
-	Playlist.prototype.playNext = function() {
+	Playlist.prototype.playNext = function () {
 		var currentIdx = this.getIndexOfTrack(this.currentTrack);
 
 		if(typeof this.songs[currentIdx+1] != 'undefined') {

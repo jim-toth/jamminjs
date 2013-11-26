@@ -25,6 +25,11 @@ body {
 
 .control {
 	width:600px;
+	display:inline-block;
+}
+
+.song-container-controls {
+	width:652px;
 }
 
 .yt-control {
@@ -186,7 +191,7 @@ body {
 }
 
 .control-input {
-	width: 100px;
+	width: 200px;
 	font-size: 18px;
 	border: 1px solid black;
 	vertical-align: middle;
@@ -207,6 +212,10 @@ body {
 .control-prog-wrap {
 	width: 200px;
 	display: inline-block;
+}
+
+.remove-song-control {
+	display:inline-block;
 }
 
 .yt-wrap {
