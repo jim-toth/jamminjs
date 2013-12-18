@@ -189,6 +189,7 @@ function mongoGetPlaylist(playlist_id, callback) {
 		if (err) {
 			//Error occurred during connection, kick it back
 			ltLog.error('Could not connect to MongoDB in mongoGetPlaylist');
+			db.close();
 			callback(err);
 		} else {
 			//Connected to database, get the playlist
@@ -199,9 +200,11 @@ function mongoGetPlaylist(playlist_id, callback) {
 				if (err) {
 					//Error occured during query
 					ltLog.error('Error during mongoGetPlaylist query');
+					db.close();
 					callback(err);
 				} else {
 					//No error, but no guarantees the playlist exists
+					db.close();
 					callback(err, playlist);
 				}
 			});
@@ -218,6 +221,7 @@ function mongoSavePlaylist(playlist, callback) {
 	MongoClient.connect(format("mongodb://%s:%s/linktape", mongohost, mongoport), function(err, db) {
 		if(err) {
 			ltLog.error('Could not connect to MongoDB in mongoSavePlaylist');
+			db.close();
 			callback(err);
 		} else {
 			//Check if the playlist already exists
@@ -225,6 +229,7 @@ function mongoSavePlaylist(playlist, callback) {
 				ltLog.verbose(inspect(playlist));
 				if(err) {
 					ltLog.error("mongoGetPlaylist returned an error in mongoSavePlaylist");
+					db.close();
 					callback(err);
 				} else {
 					//Test if the slug has collided
@@ -232,6 +237,7 @@ function mongoSavePlaylist(playlist, callback) {
 						//Slug has collided. Generate a new one and recurse
 						ltLog.dev("Collision occurred for slug: " + playlist.pid);
 						playlist.pid = genSlug();
+						db.close();
 						mongoSavePlaylist(playlist, callback);
 					} else {
 						//Slug is free. Attempt to save the playlist
@@ -242,6 +248,7 @@ function mongoSavePlaylist(playlist, callback) {
 								ltLog.error("Error inserting playlist into DB.");
 								ltLog.verbose(inspect(playlist));
 							}
+							db.close();
 							callback(err,playlist.pid);
 						});
 					}
@@ -258,6 +265,7 @@ function mongoUpdatePlaylist(playlist, callback) {
 	MongoClient.connect(format("mongodb://%s:%s/linktape", mongohost, mongoport), function(err, db) {
 		if (err) {
 			ltLog.error('Could not connect to Mongo DB!' + err);
+			db.close();
 			callback(err);
 		} else {
 			//Connected to database. Attempt to insert playlist
@@ -267,10 +275,12 @@ function mongoUpdatePlaylist(playlist, callback) {
 				if (err) {
 					// Error while attempting to connect to Mongo
 					ltLog.error('Could not update playlist '+ playlistToSave.pid + ' '+ err);
+					db.close();
 					callback(err);
 				} else {
 					//playlist has been updated, send back pid
 					ltLog.dev("Updated playlist: " + playlist.pid);
+					db.close();
 					callback(err, playlist.pid);
 				}
 			});
